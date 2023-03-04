@@ -52,7 +52,7 @@ export class NoteVM {
     this.markdown = markdown;
     this.currentNote.set({ title: this.currentNote.get.title, body: markdown });
   }
-  rerenderNote() {
+  setCurrentNoteValue() {
     this.noteRef.current = {
       title: this.currentNote.get.title,
       body: this.markdown,

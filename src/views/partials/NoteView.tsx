@@ -19,7 +19,7 @@ const NoteView: React.FC<NoteViewProps> = ({ note, noteKey }) => {
   const saveAndRerender = useCallback(
     (reactMarkdowm: HTMLElement) => {
       vm.saveNote(reactMarkdowm);
-      vm.rerenderNote();
+      vm.setCurrentNoteValue();
     },
     [vm]
   );
