@@ -27,12 +27,5 @@ export class MainPageVM {
       }
       this.notes.set(notes);
     }
-    // else {
-    //   console.log(
-    //     Array.from(this.notes.get.keys()).sort(
-    //       (a, b) => parseInt(a) - parseInt(b)
-    //     )
-    //   );
-    // }
   }
 }
