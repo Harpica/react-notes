@@ -9,17 +9,17 @@ export class TopMenuVM {
   private appDisplay: ReactiveState<AppDisplay>;
   private isNoteOpen: ReactiveState<boolean>;
   public isMenuOpen: ReactiveState<boolean>;
-  private note: ReactiveState<Note>;
+  private currentNote: ReactiveState<Note>;
   constructor(
     appDisplay: ReactiveState<AppDisplay>,
     isNoteOpen: ReactiveState<boolean>,
     isMenuOpen: ReactiveState<boolean>,
-    note: ReactiveState<Note>
+    currentNote: ReactiveState<Note>
   ) {
     this.appDisplay = appDisplay;
     this.isNoteOpen = isNoteOpen;
     this.isMenuOpen = isMenuOpen;
-    this.note = note;
+    this.currentNote = currentNote;
   }
   set setDisplay(value: AppDisplay) {
     this.appDisplay.set(value);
@@ -32,6 +32,7 @@ export class TopMenuVM {
       this.appDisplay.set("Hidden");
     }
     this.isNoteOpen.set(true);
+    this.currentNote.set({ title: "Title", body: "" });
   }
   getMenuAnchorEl() {
     return document.querySelector(".menu-button");

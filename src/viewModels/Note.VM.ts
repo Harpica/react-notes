@@ -10,13 +10,11 @@ const turndownService = new TurndownService();
 
 export class NoteVM {
   public note: ReactiveState<Note>;
-  private title: string;
-  private body: string;
+  public noteKey: ReactiveState<string>;
 
-  constructor(note: ReactiveState<Note>) {
+  constructor(note: ReactiveState<Note>, noteKey: ReactiveState<string>) {
     this.note = note;
-    this.title = this.note.get.title;
-    this.body = this.note.get.body;
+    this.noteKey = noteKey;
     // this.saveNote = this.saveNote.bind(this);
   }
   saveNoteTitle(value: string | null) {
@@ -26,7 +24,6 @@ export class NoteVM {
     } else {
       title = value;
     }
-    console.log(this.title);
     this.note.set({ title: title, body: this.note.get.body });
   }
   saveNoteBody(value: string | null) {

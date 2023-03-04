@@ -2,14 +2,18 @@ import { Box } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import useLocalStorage from "../../utils/hooks/useLocalStorage";
-import { NoteVM } from "../../viewModels/Note.VM";
+import { Note, NoteVM } from "../../viewModels/Note.VM";
 import { useEffect, useRef, useCallback } from "react";
 import { off, on } from "../../utils/events";
+import { ReactiveState } from "../../utils/hooks/useReactive.hook";
 
-const Note = () => {
-  const vm = new NoteVM(
-    useLocalStorage("Date", { title: "title", body: "Note *N*" })
-  );
+interface NoteViewProps {
+  note: ReactiveState<Note>;
+  noteKey: ReactiveState<string>;
+}
+
+const NoteView: React.FC<NoteViewProps> = ({ note, noteKey }) => {
+  const vm = new NoteVM(note, noteKey);
   const defaultValue = useRef(vm.note.get);
 
   useEffect(() => {
@@ -36,6 +40,7 @@ const Note = () => {
         width: "100%",
         height: "100%",
         p: 2,
+        flex: 2,
       }}
     >
       <Typography>Дата</Typography>
@@ -58,22 +63,16 @@ const Note = () => {
         >
           {defaultValue.current.title}
         </h1>
-        <p
-        // contentEditable="true"
-        // onInput={(e) => {
-        //   console.log("hi");
-        //   console.log(e.currentTarget);
-        //   vm.saveNoteBody(e.currentTarget.textContent);
-        // }}
-        >
-          {vm.note.get.body}
-        </p>
+        <p>{vm.note.get.body}</p>
+
         <ReactMarkdown className={"react-markdowm"}>
-          {defaultValue.current.body}
+          {defaultValue.current.body === ""
+            ? "Start writting..."
+            : defaultValue.current.body}
         </ReactMarkdown>
       </div>
     </Box>
   );
 };
 
-export default Note;
+export default NoteView;

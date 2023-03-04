@@ -10,6 +10,7 @@ import { TopMenuVM } from "../../viewModels/TopMenu.VM";
 import useReactive, { ReactiveState } from "../../utils/hooks/useReactive.hook";
 import { AppDisplay } from "../../viewModels/App.VM";
 import useLocalStorage from "../../utils/hooks/useLocalStorage";
+import { Note } from "../../viewModels/Note.VM";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -56,16 +57,16 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 interface TopMenuProps {
   appDisplay: ReactiveState<AppDisplay>;
   isNoteOpen: ReactiveState<boolean>;
+  currentNote: ReactiveState<Note>;
 }
 
-const TopMenu: React.FC<TopMenuProps> = ({ appDisplay, isNoteOpen }) => {
+const TopMenu: React.FC<TopMenuProps> = ({
+  appDisplay,
+  isNoteOpen,
+  currentNote,
+}) => {
   const isMenuOpen = useReactive(false);
-  const vm = new TopMenuVM(
-    appDisplay,
-    isNoteOpen,
-    isMenuOpen,
-    useLocalStorage("Date", { title: "title", body: "Note *N*" })
-  );
+  const vm = new TopMenuVM(appDisplay, isNoteOpen, isMenuOpen, currentNote);
 
   return (
     <AppBar position="static" sx={{ backgroundColor: "white", width: "100%" }}>

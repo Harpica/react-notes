@@ -1,20 +1,27 @@
 import {
   Box,
-  Button,
-  ButtonGroup,
-  CssBaseline,
   Divider,
-  Drawer,
   List,
   ListItem,
   ListItemButton,
-  ListItemIcon,
   ListItemText,
 } from "@mui/material";
-import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
+import { Notes } from "../../App";
+import { ReactiveState } from "../../utils/hooks/useReactive.hook";
+import { Note } from "../../viewModels/Note.VM";
+import { useEffect } from "react";
+import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 
-const Sidebar = () => {
+interface SidebarProps {
+  notes: ReactiveState<Map<string, Note> | null>;
+  currentNote: ReactiveState<Note>;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ notes, currentNote }) => {
+  // useEffect(() => {
+  //   console.log(notes);
+  // }, []);
   return (
     <Box
       sx={{
@@ -26,16 +33,28 @@ const Sidebar = () => {
         borderColor: "rgba(0, 0, 0, 0.12)",
         borderRightWidth: "thin",
         height: "100%",
+        maxWidth: "320px",
+        flex: 1,
       }}
     >
       <Typography>Сегодня</Typography>
       <Divider />
       <List>
-        <ListItem>
-          <ListItemButton>
-            <ListItemText>Первая заметка</ListItemText>
-          </ListItemButton>
-        </ListItem>
+        {notes.get &&
+          Array.from(notes.get.keys()).map((key, i) => (
+            <ListItem key={i + "note"}>
+              <ListItemButton sx={{ flexDirection: "column" }}>
+                <ListItemText>{notes.get?.get(key)?.title}</ListItemText>
+                <ListItemText>
+                  {notes.get?.get(key) !== undefined && (
+                    <ReactMarkdown>
+                      {notes.get?.get(key)?.body as string}
+                    </ReactMarkdown>
+                  )}
+                </ListItemText>
+              </ListItemButton>
+            </ListItem>
+          ))}
       </List>
     </Box>
   );
