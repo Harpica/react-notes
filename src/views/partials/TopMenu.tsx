@@ -8,7 +8,7 @@ import InputBase from "@mui/material/InputBase";
 import { styled, alpha } from "@mui/material/styles";
 import { TopMenuVM } from "../../viewModels/TopMenu.VM";
 import useReactive, { ReactiveState } from "../../utils/hooks/useReactive.hook";
-import { AppDisplay } from "../../viewModels/App.VM";
+import { AppDisplay } from "../../viewModels/MainPage.VM";
 import useLocalStorage from "../../utils/hooks/useLocalStorage";
 import { Note } from "../../viewModels/Note.VM";
 
@@ -58,15 +58,26 @@ interface TopMenuProps {
   appDisplay: ReactiveState<AppDisplay>;
   isNoteOpen: ReactiveState<boolean>;
   currentNote: ReactiveState<Note>;
+  noteKey: ReactiveState<string>;
+  notes: ReactiveState<Map<string, Note> | null>;
 }
 
 const TopMenu: React.FC<TopMenuProps> = ({
   appDisplay,
   isNoteOpen,
   currentNote,
+  noteKey,
+  notes,
 }) => {
   const isMenuOpen = useReactive(false);
-  const vm = new TopMenuVM(appDisplay, isNoteOpen, isMenuOpen, currentNote);
+  const vm = new TopMenuVM(
+    appDisplay,
+    isNoteOpen,
+    isMenuOpen,
+    currentNote,
+    noteKey,
+    notes
+  );
 
   return (
     <AppBar position="static" sx={{ backgroundColor: "white", width: "100%" }}>
@@ -112,7 +123,6 @@ const TopMenu: React.FC<TopMenuProps> = ({
           >
             <MenuItem
               onClick={() => {
-                console.log(window.getSelection());
                 vm.styleText();
                 vm.closeMenu();
               }}

@@ -41,20 +41,22 @@ const Sidebar: React.FC<SidebarProps> = ({ notes, currentNote }) => {
       <Divider />
       <List>
         {notes.get &&
-          Array.from(notes.get.keys()).map((key, i) => (
-            <ListItem key={i + "note"}>
-              <ListItemButton sx={{ flexDirection: "column" }}>
-                <ListItemText>{notes.get?.get(key)?.title}</ListItemText>
-                <ListItemText>
-                  {notes.get?.get(key) !== undefined && (
-                    <ReactMarkdown>
-                      {notes.get?.get(key)?.body as string}
-                    </ReactMarkdown>
-                  )}
-                </ListItemText>
-              </ListItemButton>
-            </ListItem>
-          ))}
+          Array.from(notes.get.keys())
+            .sort((a, b) => parseInt(b) - parseInt(a))
+            .map((key, i) => (
+              <ListItem key={i + "note"}>
+                <ListItemButton sx={{ flexDirection: "column" }}>
+                  <ListItemText>{notes.get?.get(key)?.title}</ListItemText>
+                  <ListItemText>
+                    {notes.get?.get(key) !== undefined && (
+                      <ReactMarkdown>
+                        {notes.get?.get(key)?.body as string}
+                      </ReactMarkdown>
+                    )}
+                  </ListItemText>
+                </ListItemButton>
+              </ListItem>
+            ))}
       </List>
     </Box>
   );

@@ -4,7 +4,7 @@ import { Note } from "./Note.VM";
 
 export type AppDisplay = "List" | "Grid" | "Hidden";
 
-export class AppVM {
+export class MainPageVM {
   public appDisplay: ReactiveState<AppDisplay>;
   public notes: ReactiveState<Map<string, Note> | null>;
   constructor(
@@ -26,10 +26,13 @@ export class AppVM {
         );
       }
       this.notes.set(notes);
-    } else {
-      console.log(this.notes, Array.from(this.notes.get.keys()));
-      const keys = Array.from(this.notes.get.keys());
-      console.log(this.notes.get?.get(keys[0])?.title);
     }
+    // else {
+    //   console.log(
+    //     Array.from(this.notes.get.keys()).sort(
+    //       (a, b) => parseInt(a) - parseInt(b)
+    //     )
+    //   );
+    // }
   }
 }

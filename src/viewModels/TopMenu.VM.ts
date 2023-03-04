@@ -1,6 +1,6 @@
 import { trigger } from "../utils/events";
 import { ReactiveState } from "../utils/hooks/useReactive.hook";
-import { AppDisplay } from "./App.VM";
+import { AppDisplay } from "./MainPage.VM";
 import { Note } from "./Note.VM";
 
 export type TextStyle = "Bold" | "Italic" | "Underlined" | "None";
@@ -10,16 +10,22 @@ export class TopMenuVM {
   private isNoteOpen: ReactiveState<boolean>;
   public isMenuOpen: ReactiveState<boolean>;
   private currentNote: ReactiveState<Note>;
+  private noteKey: ReactiveState<string>;
+  private notes: ReactiveState<Map<string, Note> | null>;
   constructor(
     appDisplay: ReactiveState<AppDisplay>,
     isNoteOpen: ReactiveState<boolean>,
     isMenuOpen: ReactiveState<boolean>,
-    currentNote: ReactiveState<Note>
+    currentNote: ReactiveState<Note>,
+    noteKey: ReactiveState<string>,
+    notes: ReactiveState<Map<string, Note> | null>
   ) {
     this.appDisplay = appDisplay;
     this.isNoteOpen = isNoteOpen;
     this.isMenuOpen = isMenuOpen;
     this.currentNote = currentNote;
+    this.noteKey = noteKey;
+    this.notes = notes;
   }
   set setDisplay(value: AppDisplay) {
     this.appDisplay.set(value);
@@ -32,7 +38,12 @@ export class TopMenuVM {
       this.appDisplay.set("Hidden");
     }
     this.isNoteOpen.set(true);
-    this.currentNote.set({ title: "Title", body: "" });
+    const date = Date.now().toString();
+    this.noteKey.set(date);
+    // this.currentNote.set({ title: "Title", body: "" });
+    if (this.notes.get) {
+      this.notes.set(this.notes.get.set(date, { title: "Title", body: "" }));
+    }
   }
   getMenuAnchorEl() {
     return document.querySelector(".menu-button");

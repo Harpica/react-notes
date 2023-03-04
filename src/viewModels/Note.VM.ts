@@ -9,11 +9,11 @@ export interface Note {
 const turndownService = new TurndownService();
 
 export class NoteVM {
-  public note: ReactiveState<Note>;
+  public currentNote: ReactiveState<Note>;
   public noteKey: ReactiveState<string>;
 
   constructor(note: ReactiveState<Note>, noteKey: ReactiveState<string>) {
-    this.note = note;
+    this.currentNote = note;
     this.noteKey = noteKey;
     // this.saveNote = this.saveNote.bind(this);
   }
@@ -24,7 +24,7 @@ export class NoteVM {
     } else {
       title = value;
     }
-    this.note.set({ title: title, body: this.note.get.body });
+    this.currentNote.set({ title: title, body: this.currentNote.get.body });
   }
   saveNoteBody(value: string | null) {
     let body = "";
@@ -33,15 +33,15 @@ export class NoteVM {
     } else {
       body = value;
     }
-    this.note.set({ title: this.note.get.title, body: body });
+    this.currentNote.set({ title: this.currentNote.get.title, body: body });
   }
 
   saveNote(HtmlElement: HTMLElement) {
     let markdown = turndownService.turndown(HtmlElement);
-    console.log(markdown);
+    // console.log(markdown);
     markdown = markdown.replaceAll("+$+", "**").replaceAll("****", "");
 
-    console.log("saving", markdown);
-    this.note.set({ title: this.note.get.title, body: markdown });
+    // console.log("saving", markdown);
+    this.currentNote.set({ title: this.currentNote.get.title, body: markdown });
   }
 }

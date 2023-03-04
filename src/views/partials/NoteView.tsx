@@ -14,7 +14,7 @@ interface NoteViewProps {
 
 const NoteView: React.FC<NoteViewProps> = ({ note, noteKey }) => {
   const vm = new NoteVM(note, noteKey);
-  const defaultValue = useRef(vm.note.get);
+  const defaultValue = useRef(vm.currentNote.get);
 
   useEffect(() => {
     const reactMarkdowm = document.querySelector(
@@ -24,8 +24,6 @@ const NoteView: React.FC<NoteViewProps> = ({ note, noteKey }) => {
       vm.saveNote(reactMarkdowm);
     };
     on("test formatting", saveNote);
-    console.log("adding listener");
-    console.log(saveNote, reactMarkdowm);
 
     return () => {
       off("test formatting", saveNote);
@@ -55,6 +53,7 @@ const NoteView: React.FC<NoteViewProps> = ({ note, noteKey }) => {
       >
         <h1
           contentEditable="true"
+          suppressContentEditableWarning={true}
           onInput={(e) => {
             console.log("hi");
             console.log(e.currentTarget);
@@ -63,7 +62,7 @@ const NoteView: React.FC<NoteViewProps> = ({ note, noteKey }) => {
         >
           {defaultValue.current.title}
         </h1>
-        <p>{vm.note.get.body}</p>
+        <p>{vm.currentNote.get.body}</p>
 
         <ReactMarkdown className={"react-markdowm"}>
           {defaultValue.current.body === ""
