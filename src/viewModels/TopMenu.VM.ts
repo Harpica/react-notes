@@ -31,6 +31,8 @@ export class TopMenuVM {
     this.appDisplay.set(value);
     if (value === "Grid") {
       this.isNoteOpen.set(false);
+    } else {
+      this.isNoteOpen.set(true);
     }
   }
   startNewNote() {
@@ -55,7 +57,7 @@ export class TopMenuVM {
       (() => {
         const keys = Object.keys(localStorage);
         return keys.length
-          ? keys.sort((a, b) => parseInt(a) - parseInt(b))[0]
+          ? keys.sort((a, b) => parseInt(b) - parseInt(a))[0]
           : Date.now().toString();
       })()
     );

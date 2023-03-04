@@ -1,28 +1,15 @@
 import Typography from "@mui/material/Typography";
-import {
-  Box,
-  Button,
-  ButtonGroup,
-  Card,
-  CssBaseline,
-  Divider,
-  Drawer,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-} from "@mui/material";
+import { Card, ListItemButton, ListItemText } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import { ReactiveState } from "../../utils/hooks/useReactive.hook";
 import { Note } from "../../viewModels/Note.VM";
+import { NoteListVM } from "../../viewModels/NoteList.VM";
 
 interface GridViewProps {
-  notes: ReactiveState<Map<string, Note> | null>;
-  currentNote: ReactiveState<Note>;
+  vm: NoteListVM;
 }
 
-const GridView: React.FC<GridViewProps> = ({ notes, currentNote }) => {
+const GridView: React.FC<GridViewProps> = ({ vm }) => {
   return (
     <Grid
       container
@@ -32,25 +19,28 @@ const GridView: React.FC<GridViewProps> = ({ notes, currentNote }) => {
         width: "100%",
         boxSizing: "border-box",
         m: 0,
-        backgroundColor: "rgb(193, 193, 193)",
+        mt: 1,
+        // height without topbar ang mt
+        maxHeight: "calc(100vh - 64px - 8px)",
+        overflowY: "scroll",
       }}
     >
-      {notes.get &&
-        Array.from(notes.get.keys()).map((key, i) => (
+      {vm.notes.get &&
+        Array.from(vm.notes.get.keys()).map((key, i) => (
           <Grid key={i + "grid"} xs={4} sx={{ minWidth: "250px" }}>
             <Card>
               <ListItemButton
                 sx={{ height: "300px", textAlign: "start", overflow: "hidden" }}
+                onClick={() => {
+                  vm.setCurrentNote(key);
+                }}
               >
-                {notes.get?.get(key)?.title}
+                {vm.notes.get?.get(key)?.title}
               </ListItemButton>
             </Card>
-            <ListItemText>Время создания</ListItemText>
+            <ListItemText>{}</ListItemText>
           </Grid>
         ))}
-      {/* // <Grid xs={4} sx={{ bminWidth: "250px", maxHeight: "300px" }}></Grid>
-      // <Grid xs={4} sx={{ bminWidth: "250px", maxHeight: "300px" }}></Grid>
-      // <Grid xs={4} sx={{ bminWidth: "250px", maxHeight: "300px" }}></Grid> */}
     </Grid>
   );
 };

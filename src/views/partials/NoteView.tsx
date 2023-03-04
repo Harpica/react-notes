@@ -3,7 +3,7 @@ import Typography from "@mui/material/Typography";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import useLocalStorage from "../../utils/hooks/useLocalStorage";
 import { Note, NoteVM } from "../../viewModels/Note.VM";
-import { useEffect, useRef, useCallback } from "react";
+import React, { useEffect, useRef, useCallback, useReducer } from "react";
 import { off, on } from "../../utils/events";
 import { ReactiveState } from "../../utils/hooks/useReactive.hook";
 
@@ -13,20 +13,29 @@ interface NoteViewProps {
 }
 
 const NoteView: React.FC<NoteViewProps> = ({ note, noteKey }) => {
-  const vm = new NoteVM(note, noteKey);
-  const defaultValue = useRef(vm.currentNote.get);
+  const defaultCurrentNoteValue = useRef(note.get);
+  const vm = new NoteVM(note, noteKey, defaultCurrentNoteValue);
+
+  const saveAndRerender = useCallback(
+    (reactMarkdowm: HTMLElement) => {
+      vm.saveNote(reactMarkdowm);
+      vm.rerenderNote();
+    },
+    [vm]
+  );
 
   useEffect(() => {
     const reactMarkdowm = document.querySelector(
       ".react-markdowm"
     ) as HTMLElement;
-    const saveNote = () => {
-      vm.saveNote(reactMarkdowm);
+    const save = () => {
+      saveAndRerender(reactMarkdowm);
     };
-    on("test formatting", saveNote);
+
+    on("test formatting", save);
 
     return () => {
-      off("test formatting", saveNote);
+      off("test formatting", save);
     };
   }, []);
 
@@ -39,10 +48,24 @@ const NoteView: React.FC<NoteViewProps> = ({ note, noteKey }) => {
         height: "100%",
         p: 2,
         flex: 2,
+        overflow: "clip",
       }}
     >
-      <Typography>Дата</Typography>
-      <div
+      <Typography>{vm.date}</Typography>
+
+      <h1
+        contentEditable="true"
+        suppressContentEditableWarning={true}
+        onInput={(e) => {
+          console.log("hi");
+          console.log(e.currentTarget);
+          vm.saveNoteTitle(e.currentTarget.textContent);
+        }}
+      >
+        {defaultCurrentNoteValue.current.title}
+      </h1>
+      <p>{vm.currentNote.get.body}</p>
+      <Box
         contentEditable="true"
         suppressContentEditableWarning={true}
         onInput={(e) => {
@@ -51,27 +74,16 @@ const NoteView: React.FC<NoteViewProps> = ({ note, noteKey }) => {
           );
         }}
       >
-        <h1
-          contentEditable="true"
-          suppressContentEditableWarning={true}
-          onInput={(e) => {
-            console.log("hi");
-            console.log(e.currentTarget);
-            vm.saveNoteTitle(e.currentTarget.textContent);
-          }}
-        >
-          {defaultValue.current.title}
-        </h1>
-        <p>{vm.currentNote.get.body}</p>
-
         <ReactMarkdown className={"react-markdowm"}>
-          {defaultValue.current.body === ""
+          {/* {defaultValue.current.body === ""
             ? "Start writting..."
-            : defaultValue.current.body}
+            : defaultValue.current.body} */}
+          {/* {vm.currentNote.get.body} */}
+          {defaultCurrentNoteValue.current.body}
         </ReactMarkdown>
-      </div>
+      </Box>
     </Box>
   );
 };
 
-export default NoteView;
+export default React.memo(NoteView);

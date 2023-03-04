@@ -1,5 +1,6 @@
 import "./App.css";
 import useReactive from "./utils/hooks/useReactive.hook";
+import { AppDisplay } from "./viewModels/MainPage.VM";
 import { Note } from "./viewModels/Note.VM";
 import MainPage from "./views/pages/MainPage";
 export type Notes = { [key: string]: Note };
@@ -15,10 +16,15 @@ function App() {
         : Date.now().toString();
     })()
   );
+  const appDisplay = useReactive<AppDisplay>("List");
 
   return (
     <>
-      <MainPage currentNoteKey={currentNoteKey} key={currentNoteKey.get} />
+      <MainPage
+        currentNoteKey={currentNoteKey}
+        appDisplay={appDisplay}
+        key={currentNoteKey.get}
+      />
     </>
   );
 }

@@ -10,23 +10,15 @@ import Typography from "@mui/material/Typography";
 import { Notes } from "../../App";
 import { ReactiveState } from "../../utils/hooks/useReactive.hook";
 import { Note } from "../../viewModels/Note.VM";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
-import { SidebarVM } from "../../viewModels/Sidebar.VM";
+import { NoteListVM } from "../../viewModels/NoteList.VM";
 
 interface SidebarProps {
-  notes: ReactiveState<Map<string, Note> | null>;
-  currentNote: ReactiveState<Note>;
-  currentNoteKey: ReactiveState<string>;
+  vm: NoteListVM;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({
-  notes,
-  currentNote,
-  currentNoteKey,
-}) => {
-  const vm = new SidebarVM(notes, currentNoteKey);
-
+const Sidebar: React.FC<SidebarProps> = React.memo(({ vm }) => {
   return (
     <Box
       sx={{
@@ -44,24 +36,29 @@ const Sidebar: React.FC<SidebarProps> = ({
     >
       <Typography>Сегодня</Typography>
       <Divider />
-      <List>
-        {notes.get &&
-          Array.from(notes.get.keys())
+      <List sx={{ overflow: "auto", maxHeight: "75vh" }}>
+        {vm.notes.get &&
+          Array.from(vm.notes.get.keys())
             .sort((a, b) => parseInt(b) - parseInt(a))
             .map((key, i) => (
               <ListItem key={i + "note"}>
                 <ListItemButton
-                  sx={{ flexDirection: "column" }}
+                  divider={true}
+                  sx={{
+                    flexDirection: "column",
+                    overflow: "hidden",
+                    alignItems: "flex-start",
+                    maxHeight: "140px",
+                  }}
                   onClick={() => {
                     vm.setCurrentNote(key);
-                    console.log(key);
                   }}
                 >
-                  <ListItemText>{notes.get?.get(key)?.title}</ListItemText>
+                  <ListItemText>{vm.notes.get?.get(key)?.title}</ListItemText>
                   <ListItemText>
-                    {notes.get?.get(key) !== undefined && (
+                    {vm.notes.get?.get(key) !== undefined && (
                       <ReactMarkdown>
-                        {notes.get?.get(key)?.body as string}
+                        {vm.notes.get?.get(key)?.body as string}
                       </ReactMarkdown>
                     )}
                   </ListItemText>
@@ -71,6 +68,6 @@ const Sidebar: React.FC<SidebarProps> = ({
       </List>
     </Box>
   );
-};
+});
 
 export default Sidebar;
