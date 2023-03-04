@@ -12,16 +12,21 @@ import { ReactiveState } from "../../utils/hooks/useReactive.hook";
 import { Note } from "../../viewModels/Note.VM";
 import { useEffect } from "react";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
+import { SidebarVM } from "../../viewModels/Sidebar.VM";
 
 interface SidebarProps {
   notes: ReactiveState<Map<string, Note> | null>;
   currentNote: ReactiveState<Note>;
+  currentNoteKey: ReactiveState<string>;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ notes, currentNote }) => {
-  // useEffect(() => {
-  //   console.log(notes);
-  // }, []);
+const Sidebar: React.FC<SidebarProps> = ({
+  notes,
+  currentNote,
+  currentNoteKey,
+}) => {
+  const vm = new SidebarVM(notes, currentNoteKey);
+
   return (
     <Box
       sx={{
@@ -45,7 +50,13 @@ const Sidebar: React.FC<SidebarProps> = ({ notes, currentNote }) => {
             .sort((a, b) => parseInt(b) - parseInt(a))
             .map((key, i) => (
               <ListItem key={i + "note"}>
-                <ListItemButton sx={{ flexDirection: "column" }}>
+                <ListItemButton
+                  sx={{ flexDirection: "column" }}
+                  onClick={() => {
+                    vm.setCurrentNote(key);
+                    console.log(key);
+                  }}
+                >
                   <ListItemText>{notes.get?.get(key)?.title}</ListItemText>
                   <ListItemText>
                     {notes.get?.get(key) !== undefined && (

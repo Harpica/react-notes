@@ -22,7 +22,6 @@ const MainPage: React.FC<MainPageProps> = ({ currentNoteKey }) => {
   const isNoteOpen = useReactive<boolean>(true);
   // isMenuOpen = ///
   const textStyle = useReactive<TextStyle>("None");
-  // const currentNoteKey = useReactive<string>("Date");
   const currentNote = useLocalStorage<Note>(currentNoteKey.get, {
     title: "Title",
     body: "",
@@ -62,7 +61,11 @@ const MainPage: React.FC<MainPageProps> = ({ currentNoteKey }) => {
           }}
         >
           {appDisplay.get === "List" && (
-            <Sidebar notes={notes} currentNote={currentNote} />
+            <Sidebar
+              notes={notes}
+              currentNote={currentNote}
+              currentNoteKey={currentNoteKey}
+            />
           )}
           {appDisplay.get === "Grid" && (
             <GridView notes={notes} currentNote={currentNote} />

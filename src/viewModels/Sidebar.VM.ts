@@ -2,16 +2,16 @@ import { ReactiveState } from "../utils/hooks/useReactive.hook";
 import { Note } from "./Note.VM";
 
 export class SidebarVM {
-  // public appDisplay: ReactiveState<AppDisplay>;
   public notes: ReactiveState<Map<string, Note> | null>;
+  private currentNoteKey: ReactiveState<string>;
   constructor(
-    // appDisplay: ReactiveState<AppDisplay>,
-    notes: ReactiveState<Map<string, Note> | null>
+    notes: ReactiveState<Map<string, Note> | null>,
+    currentNoteKey: ReactiveState<string>
   ) {
-    // this.appDisplay = appDisplay;
     this.notes = notes;
+    this.currentNoteKey = currentNoteKey;
   }
-  // getAllNotes() {
-
-  // }
+  setCurrentNote(key: string) {
+    this.currentNoteKey.set(key);
+  }
 }
