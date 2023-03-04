@@ -98,7 +98,14 @@ const TopMenu: React.FC<TopMenuProps> = ({
             Grid
           </Button>
         </ButtonGroup>
-        <Button variant="text">Delete</Button>
+        <Button
+          variant="text"
+          onClick={() => {
+            vm.deleteNote(noteKey.get);
+          }}
+        >
+          Delete
+        </Button>
         <ButtonGroup variant="text" aria-label="text button group">
           <Button
             onClick={() => {

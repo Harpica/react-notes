@@ -40,10 +40,25 @@ export class TopMenuVM {
     this.isNoteOpen.set(true);
     const date = Date.now().toString();
     this.noteKey.set(date);
-    // this.currentNote.set({ title: "Title", body: "" });
     if (this.notes.get) {
       this.notes.set(this.notes.get.set(date, { title: "Title", body: "" }));
     }
+  }
+  deleteNote(key: string) {
+    if (this.notes.get) {
+      let notes = this.notes.get;
+      notes.delete(key);
+      this.notes.set(notes);
+    }
+    window.localStorage.removeItem(key);
+    this.noteKey.set(
+      (() => {
+        const keys = Object.keys(localStorage);
+        return keys.length
+          ? keys.sort((a, b) => parseInt(a) - parseInt(b))[0]
+          : Date.now().toString();
+      })()
+    );
   }
   getMenuAnchorEl() {
     return document.querySelector(".menu-button");
