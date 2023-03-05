@@ -31,7 +31,7 @@ const NoteView: React.FC<NoteViewProps> = ({ note, noteKey }) => {
   // Every time currentNote changes, we find once again ReactMarkdown element
   useEffect(() => {
     const reactMarkdowm = document.querySelector(
-      ".react-markdowm"
+      ".react-markdown"
     ) as HTMLElement;
     const save = (e: Event) => {
       if (isCustomEvent(e)) {
@@ -64,7 +64,7 @@ const NoteView: React.FC<NoteViewProps> = ({ note, noteKey }) => {
         suppressContentEditableWarning={true}
         onInput={(e) => {
           vm.saveNote(
-            e.currentTarget.querySelector(".react-markdowm") as HTMLElement,
+            e.currentTarget.querySelector(".react-markdown") as HTMLElement,
             TextStyle.NONE
           );
         }}
@@ -72,7 +72,7 @@ const NoteView: React.FC<NoteViewProps> = ({ note, noteKey }) => {
         {/* You can uncomment below to see markdown changes in real time */}
         {/* <p>{note.get.body}</p> */}
         <ReactMarkdown
-          className={"react-markdowm"}
+          className={"react-markdown"}
           key={defaultCurrentNoteValue.current.body}
         >
           {defaultCurrentNoteValue.current.body === ""

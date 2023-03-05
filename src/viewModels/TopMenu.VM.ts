@@ -95,8 +95,12 @@ export class TopMenuVM {
     this.closeMenu();
   }
   private styleText() {
-    if (window.getSelection() !== null) {
-      const selection = window.getSelection() as Selection;
+    const selection = window.getSelection() as Selection;
+    // inserting markers (+$+) only if selected nodes have parent - ReactMarkdown
+    if (
+      selection !== null &&
+      selection.anchorNode?.parentElement?.closest(".react-markdown")
+    ) {
       if (selection.anchorNode !== null && selection.focusNode !== null) {
         const anchorNodeValue = selection.anchorNode.nodeValue;
         const indexOfSelectionStart = selection.anchorOffset;
