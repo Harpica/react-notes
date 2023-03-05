@@ -22,6 +22,9 @@ const style = {
     textAlign: "start",
     overflow: "hidden",
   },
+  listTitle: {
+    fontWeight: "bold",
+  },
 };
 
 interface GridViewProps {
@@ -41,7 +44,9 @@ const GridView: React.FC<GridViewProps> = ({ vm }) => {
                   vm.setCurrentNote(key);
                 }}
               >
-                <ListItemText>{vm.notes.get?.get(key)?.title}</ListItemText>
+                <ListItemText sx={style.listTitle} disableTypography={true}>
+                  {vm.notes.get?.get(key)?.title}
+                </ListItemText>
                 <ListItemText>
                   {vm.notes.get?.get(key) !== undefined && (
                     <ReactMarkdown>

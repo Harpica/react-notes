@@ -34,6 +34,9 @@ const style = {
     alignItems: "flex-start",
     maxHeight: "140px",
   },
+  listTitle: {
+    fontWeight: "bold",
+  },
 };
 
 interface SidebarProps {
@@ -43,7 +46,7 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = React.memo(({ vm }) => {
   return (
     <Box sx={style.box}>
-      <Typography>Сегодня</Typography>
+      <Typography>Today</Typography>
       <Divider />
       <List sx={style.list}>
         {vm.notes.get &&
@@ -56,7 +59,9 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ vm }) => {
                   vm.setCurrentNote(key);
                 }}
               >
-                <ListItemText>{vm.notes.get?.get(key)?.title}</ListItemText>
+                <ListItemText sx={style.listTitle} disableTypography={true}>
+                  {vm.notes.get?.get(key)?.title}
+                </ListItemText>
                 <ListItemText>
                   {vm.notes.get?.get(key) !== undefined && (
                     <ReactMarkdown>

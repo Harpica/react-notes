@@ -69,7 +69,8 @@ const NoteView: React.FC<NoteViewProps> = ({ note, noteKey }) => {
           );
         }}
       >
-        <p>{note.get.body}</p>
+        {/* You can uncomment below to see markdown changes in real time */}
+        {/* <p>{note.get.body}</p> */}
         <ReactMarkdown
           className={"react-markdowm"}
           key={defaultCurrentNoteValue.current.body}
