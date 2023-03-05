@@ -74,7 +74,11 @@ const MainPage: React.FC<MainPageProps> = ({ currentNoteKey, appDisplay }) => {
           />
 
           {isNoteOpen.get && (
-            <NoteView note={currentNote} noteKey={currentNoteKey} />
+            <NoteView
+              note={currentNote}
+              noteKey={currentNoteKey}
+              notes={notes}
+            />
           )}
         </Box>
       </Box>

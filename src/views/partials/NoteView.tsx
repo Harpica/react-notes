@@ -22,11 +22,12 @@ const style = {
 interface NoteViewProps {
   note: ReactiveState<Note>;
   noteKey: ReactiveState<string>;
+  notes: ReactiveState<Map<string, Note> | null>;
 }
 
-const NoteView: React.FC<NoteViewProps> = ({ note, noteKey }) => {
+const NoteView: React.FC<NoteViewProps> = ({ note, noteKey, notes }) => {
   const defaultCurrentNoteValue = useRef(note.get);
-  const vm = new NoteVM(note, noteKey, defaultCurrentNoteValue);
+  const vm = new NoteVM(note, noteKey, defaultCurrentNoteValue, notes);
 
   // Every time currentNote changes, we find once again ReactMarkdown element
   useEffect(() => {
@@ -71,10 +72,7 @@ const NoteView: React.FC<NoteViewProps> = ({ note, noteKey }) => {
       >
         {/* You can uncomment below to see markdown changes in real time */}
         {/* <p>{note.get.body}</p> */}
-        <ReactMarkdown
-          className={"react-markdown"}
-          key={defaultCurrentNoteValue.current.body}
-        >
+        <ReactMarkdown className={"react-markdown"}>
           {defaultCurrentNoteValue.current.body === ""
             ? "Start writting..."
             : defaultCurrentNoteValue.current.body}

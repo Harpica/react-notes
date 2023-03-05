@@ -24,12 +24,15 @@ export class NoteVM {
   private noteRef: React.MutableRefObject<Note>;
   public date: string;
   private markdown: string;
+  private notes: ReactiveState<Map<string, Note> | null>;
 
   constructor(
     note: ReactiveState<Note>,
     noteKey: ReactiveState<string>,
-    noteRef: React.MutableRefObject<Note>
+    noteRef: React.MutableRefObject<Note>,
+    notes: ReactiveState<Map<string, Note> | null>
   ) {
+    this.notes = notes;
     this.currentNote = note;
     this.noteKey = noteKey;
     this.noteRef = noteRef;
@@ -45,6 +48,7 @@ export class NoteVM {
       title = value;
     }
     this.currentNote.set({ title: title, body: this.currentNote.get.body });
+    this.updateNoteMap(title, this.currentNote.get.body);
   }
 
   saveNote(HtmlElement: HTMLElement, textStyle?: TextStyle) {
@@ -52,14 +56,24 @@ export class NoteVM {
     if (textStyle) {
       this.formatText(textStyle);
     }
+
     this.currentNote.set({
       title: this.currentNote.get.title,
       body: this.markdown,
     });
+    this.updateNoteMap(this.currentNote.get.title, this.markdown);
   }
   saveNoteAfterTextFormat(reactMarkdowm: HTMLElement, textStyle: TextStyle) {
     this.saveNote(reactMarkdowm, textStyle);
     this.setCurrentNoteValue();
+  }
+  private updateNoteMap(title: string, body: string) {
+    const notes = this.notes.get;
+    notes?.set(this.noteKey.get, {
+      title: title,
+      body: body,
+    });
+    this.notes.set(notes);
   }
   private setMarkdown(HtmlElement: HTMLElement) {
     this.markdown = turndownService.turndown(HtmlElement);

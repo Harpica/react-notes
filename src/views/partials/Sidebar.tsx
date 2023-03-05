@@ -22,7 +22,7 @@ const style = {
     borderColor: "rgba(0, 0, 0, 0.12)",
     borderRightWidth: "thin",
     height: "100%",
-    maxWidth: "320px",
+    width: "320px",
     flex: 1,
     backgroundColor: "#1976d217",
   },
