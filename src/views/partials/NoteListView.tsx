@@ -12,6 +12,7 @@ interface NoteListViewProps {
   currentNoteKey: ReactiveState<string>;
   appDisplay: ReactiveState<AppDisplay>;
   isNoteOpen: ReactiveState<boolean>;
+  noteKeysSorted: ReactiveState<Array<string>>;
 }
 
 const NoteListView: React.FC<NoteListViewProps> = ({
@@ -19,8 +20,15 @@ const NoteListView: React.FC<NoteListViewProps> = ({
   currentNoteKey,
   appDisplay,
   isNoteOpen,
+  noteKeysSorted,
 }) => {
-  const vm = new NoteListVM(notes, currentNoteKey, isNoteOpen, appDisplay);
+  const vm = new NoteListVM(
+    notes,
+    currentNoteKey,
+    isNoteOpen,
+    appDisplay,
+    noteKeysSorted
+  );
   return (
     <>
       {appDisplay.get === "List" && <Sidebar vm={vm} />}

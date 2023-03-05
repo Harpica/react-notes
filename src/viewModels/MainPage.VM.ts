@@ -5,15 +5,14 @@ import { Note } from "./Note.VM";
 export type AppDisplay = "List" | "Grid" | "Hidden";
 
 export class MainPageVM {
-  public appDisplay: ReactiveState<AppDisplay>;
-  public notes: ReactiveState<Map<string, Note> | null>;
+  private notes: ReactiveState<Map<string, Note> | null>;
+  private noteKeysSorted: ReactiveState<Array<string>>;
   constructor(
-    appDisplay: ReactiveState<AppDisplay>,
-    notes: ReactiveState<Map<string, Note> | null>
+    notes: ReactiveState<Map<string, Note> | null>,
+    noteKeysSorted: ReactiveState<Array<string>>
   ) {
-    this.appDisplay = appDisplay;
     this.notes = notes;
-    this.getAllNotes();
+    this.noteKeysSorted = noteKeysSorted;
   }
   getAllNotes() {
     if (this.notes.get === null) {
@@ -26,6 +25,12 @@ export class MainPageVM {
         );
       }
       this.notes.set(notes);
+      this.setNoteKeys(notes);
     }
+  }
+  private setNoteKeys(notes: Map<string, Note>) {
+    this.noteKeysSorted.set(
+      Array.from(notes.keys()).sort((a, b) => parseInt(b) - parseInt(a))
+    );
   }
 }

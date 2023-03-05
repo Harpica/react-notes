@@ -1,14 +1,11 @@
-import { TextStyle } from "../../viewModels/TopMenu.VM";
 import useLocalStorage from "../../utils/hooks/useLocalStorage";
 import { Note } from "../../viewModels/Note.VM";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import useReactive, { ReactiveState } from "../../utils/hooks/useReactive.hook";
 import { AppDisplay, MainPageVM } from "../../viewModels/MainPage.VM";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import TopMenu from "../partials/TopMenu";
-import Sidebar from "../partials/Sidebar";
-import GridView from "../partials/GridView";
 import NoteView from "../partials/NoteView";
 import NoteListView from "../partials/NoteListView";
 
@@ -21,19 +18,18 @@ interface MainPageProps {
 
 const MainPage: React.FC<MainPageProps> = ({ currentNoteKey, appDisplay }) => {
   const isNoteOpen = useReactive<boolean>(true);
-  // isMenuOpen = ///
-  const textStyle = useReactive<TextStyle>(TextStyle.NONE);
   const currentNote = useLocalStorage<Note>(currentNoteKey.get, {
     title: "Title",
     body: "",
   });
-  // const defaultCurrentNoteValue = useRef(currentNote.get);
   const notes = useReactive<Map<string, Note> | null>(null);
+  const noteKeysSorted = useReactive<Array<string>>([]);
 
-  const vm = new MainPageVM(appDisplay, notes);
+  const vm = new MainPageVM(notes, noteKeysSorted);
 
   useEffect(() => {
     console.log("I render");
+    vm.getAllNotes();
   }, []);
 
   return (
@@ -50,9 +46,9 @@ const MainPage: React.FC<MainPageProps> = ({ currentNoteKey, appDisplay }) => {
         <TopMenu
           appDisplay={appDisplay}
           isNoteOpen={isNoteOpen}
-          currentNote={currentNote}
           noteKey={currentNoteKey}
           notes={notes}
+          noteKeysSorted={noteKeysSorted}
         />
         <Box
           sx={{
@@ -68,6 +64,7 @@ const MainPage: React.FC<MainPageProps> = ({ currentNoteKey, appDisplay }) => {
             currentNoteKey={currentNoteKey}
             notes={notes}
             isNoteOpen={isNoteOpen}
+            noteKeysSorted={noteKeysSorted}
           />
 
           {isNoteOpen.get && (

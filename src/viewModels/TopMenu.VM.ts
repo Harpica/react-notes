@@ -1,5 +1,6 @@
 import { trigger } from "../utils/events";
 import { ReactiveState } from "../utils/hooks/useReactive.hook";
+import search from "../utils/search";
 import { AppDisplay } from "./MainPage.VM";
 import { Note } from "./Note.VM";
 
@@ -15,27 +16,27 @@ export class TopMenuVM {
   private isNoteOpen: ReactiveState<boolean>;
   public isMenuOpen: ReactiveState<boolean>;
   public isDeleteModalOpen: ReactiveState<boolean>;
-  private currentNote: ReactiveState<Note>;
   private noteKey: ReactiveState<string>;
   private notes: ReactiveState<Map<string, Note> | null>;
   private textStyle: TextStyle;
+  private noteKeysSorted: ReactiveState<Array<string>>;
   constructor(
     appDisplay: ReactiveState<AppDisplay>,
     isNoteOpen: ReactiveState<boolean>,
     isMenuOpen: ReactiveState<boolean>,
     isDeleteModalOpen: ReactiveState<boolean>,
-    currentNote: ReactiveState<Note>,
     noteKey: ReactiveState<string>,
-    notes: ReactiveState<Map<string, Note> | null>
+    notes: ReactiveState<Map<string, Note> | null>,
+    noteKeysSorted: ReactiveState<Array<string>>
   ) {
     this.appDisplay = appDisplay;
     this.isNoteOpen = isNoteOpen;
     this.isMenuOpen = isMenuOpen;
     this.isDeleteModalOpen = isDeleteModalOpen;
-    this.currentNote = currentNote;
     this.noteKey = noteKey;
     this.notes = notes;
     this.textStyle = TextStyle.NONE;
+    this.noteKeysSorted = noteKeysSorted;
   }
   set setDisplay(value: AppDisplay) {
     this.appDisplay.set(value);
@@ -143,6 +144,48 @@ export class TopMenuVM {
         }
       }
     }
+    // Sending custom event to Note view
     trigger("test formatting", { style: this.textStyle });
+  }
+  searchNotes(inputValue: string) {
+    // Sort by latest Date
+    let noteKeys = Array.from(this.notes.get!.keys()).sort(
+      (a, b) => parseInt(b) - parseInt(a)
+    );
+
+    // If there is empty search - early return
+    if (inputValue === "") {
+      this.noteKeysSorted.set(noteKeys);
+      return;
+    }
+
+    const keysAndComparedValues = new Map<string, number>([["", 0]]);
+
+    noteKeys.forEach((key) => {
+      keysAndComparedValues.set(key, this.getComparedValue(key, inputValue));
+    });
+
+    noteKeys = noteKeys
+      .filter((key) => {
+        const comparedValue = keysAndComparedValues.get(key);
+        if (comparedValue) {
+          return comparedValue > 0;
+        }
+      })
+      .sort(
+        (a, b) => keysAndComparedValues.get(a)! - keysAndComparedValues.get(b)!
+      );
+
+    this.noteKeysSorted.set(noteKeys);
+  }
+  private getComparedValue(key: string, inputValue: string) {
+    if (this.notes.get) {
+      const note = this.notes.get.get(key);
+      if (note) {
+        const textValue = note.body;
+        return search.getCompatedValue(textValue, inputValue);
+      }
+    }
+    return 0;
   }
 }

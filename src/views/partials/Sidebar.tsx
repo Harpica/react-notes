@@ -35,33 +35,31 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ vm }) => {
       <Divider />
       <List sx={{ overflow: "auto", maxHeight: "75vh" }}>
         {vm.notes.get &&
-          Array.from(vm.notes.get.keys())
-            .sort((a, b) => parseInt(b) - parseInt(a))
-            .map((key, i) => (
-              <ListItem key={i + "note"}>
-                <ListItemButton
-                  divider={true}
-                  sx={{
-                    flexDirection: "column",
-                    overflow: "hidden",
-                    alignItems: "flex-start",
-                    maxHeight: "140px",
-                  }}
-                  onClick={() => {
-                    vm.setCurrentNote(key);
-                  }}
-                >
-                  <ListItemText>{vm.notes.get?.get(key)?.title}</ListItemText>
-                  <ListItemText>
-                    {vm.notes.get?.get(key) !== undefined && (
-                      <ReactMarkdown>
-                        {vm.notes.get?.get(key)?.body as string}
-                      </ReactMarkdown>
-                    )}
-                  </ListItemText>
-                </ListItemButton>
-              </ListItem>
-            ))}
+          vm.noteKeysSorted.get.map((key, i) => (
+            <ListItem key={i + "note"}>
+              <ListItemButton
+                divider={true}
+                sx={{
+                  flexDirection: "column",
+                  overflow: "hidden",
+                  alignItems: "flex-start",
+                  maxHeight: "140px",
+                }}
+                onClick={() => {
+                  vm.setCurrentNote(key);
+                }}
+              >
+                <ListItemText>{vm.notes.get?.get(key)?.title}</ListItemText>
+                <ListItemText>
+                  {vm.notes.get?.get(key) !== undefined && (
+                    <ReactMarkdown>
+                      {vm.notes.get?.get(key)?.body as string}
+                    </ReactMarkdown>
+                  )}
+                </ListItemText>
+              </ListItemButton>
+            </ListItem>
+          ))}
       </List>
     </Box>
   );

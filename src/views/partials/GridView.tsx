@@ -24,35 +24,33 @@ const GridView: React.FC<GridViewProps> = ({ vm }) => {
       }}
     >
       {vm.notes.get &&
-        Array.from(vm.notes.get.keys())
-          .sort((a, b) => parseInt(b) - parseInt(a))
-          .map((key, i) => (
-            <Grid key={i + "grid"} xs={4} sx={{ minWidth: "250px" }}>
-              <Card>
-                <ListItemButton
-                  sx={{
-                    flexDirection: "column",
-                    height: "300px",
-                    textAlign: "start",
-                    overflow: "hidden",
-                  }}
-                  onClick={() => {
-                    vm.setCurrentNote(key);
-                  }}
-                >
-                  <ListItemText>{vm.notes.get?.get(key)?.title}</ListItemText>
-                  <ListItemText>
-                    {vm.notes.get?.get(key) !== undefined && (
-                      <ReactMarkdown>
-                        {vm.notes.get?.get(key)?.body as string}
-                      </ReactMarkdown>
-                    )}
-                  </ListItemText>
-                </ListItemButton>
-              </Card>
-              <ListItemText>{vm.renderDate(key)}</ListItemText>
-            </Grid>
-          ))}
+        vm.noteKeysSorted.get.map((key, i) => (
+          <Grid key={i + "grid"} xs={4} sx={{ minWidth: "250px" }}>
+            <Card>
+              <ListItemButton
+                sx={{
+                  flexDirection: "column",
+                  height: "300px",
+                  textAlign: "start",
+                  overflow: "hidden",
+                }}
+                onClick={() => {
+                  vm.setCurrentNote(key);
+                }}
+              >
+                <ListItemText>{vm.notes.get?.get(key)?.title}</ListItemText>
+                <ListItemText>
+                  {vm.notes.get?.get(key) !== undefined && (
+                    <ReactMarkdown>
+                      {vm.notes.get?.get(key)?.body as string}
+                    </ReactMarkdown>
+                  )}
+                </ListItemText>
+              </ListItemButton>
+            </Card>
+            <ListItemText>{vm.renderDate(key)}</ListItemText>
+          </Grid>
+        ))}
     </Grid>
   );
 };

@@ -57,17 +57,17 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 interface TopMenuProps {
   appDisplay: ReactiveState<AppDisplay>;
   isNoteOpen: ReactiveState<boolean>;
-  currentNote: ReactiveState<Note>;
   noteKey: ReactiveState<string>;
   notes: ReactiveState<Map<string, Note> | null>;
+  noteKeysSorted: ReactiveState<Array<string>>;
 }
 
 const TopMenu: React.FC<TopMenuProps> = ({
   appDisplay,
   isNoteOpen,
-  currentNote,
   noteKey,
   notes,
+  noteKeysSorted,
 }) => {
   const isMenuOpen = useReactive(false);
   const isDeleteModalOpen = useReactive(false);
@@ -76,9 +76,9 @@ const TopMenu: React.FC<TopMenuProps> = ({
     isNoteOpen,
     isMenuOpen,
     isDeleteModalOpen,
-    currentNote,
     noteKey,
-    notes
+    notes,
+    noteKeysSorted
   );
 
   return (
@@ -164,6 +164,13 @@ const TopMenu: React.FC<TopMenuProps> = ({
             <StyledInputBase
               placeholder="Search…"
               inputProps={{ "aria-label": "search" }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  vm.searchNotes(e.currentTarget.value);
+                } else {
+                  console.log(e.key);
+                }
+              }}
             />
           </Search>
         </Toolbar>

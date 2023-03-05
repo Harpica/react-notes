@@ -7,16 +7,19 @@ export class NoteListVM {
   private currentNoteKey: ReactiveState<string>;
   private isNoteOpen: ReactiveState<boolean>;
   private appDisplay: ReactiveState<AppDisplay>;
+  public noteKeysSorted: ReactiveState<Array<string>>;
   constructor(
     notes: ReactiveState<Map<string, Note> | null>,
     currentNoteKey: ReactiveState<string>,
     isNoteOpen: ReactiveState<boolean>,
-    appDisplay: ReactiveState<AppDisplay>
+    appDisplay: ReactiveState<AppDisplay>,
+    noteKeysSorted: ReactiveState<Array<string>>
   ) {
     this.notes = notes;
     this.currentNoteKey = currentNoteKey;
     this.isNoteOpen = isNoteOpen;
     this.appDisplay = appDisplay;
+    this.noteKeysSorted = noteKeysSorted;
   }
   setCurrentNote(key: string) {
     if (this.appDisplay.get === "Grid") {
