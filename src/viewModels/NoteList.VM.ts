@@ -8,21 +8,24 @@ export class NoteListVM {
   private isNoteOpen: ReactiveState<boolean>;
   private appDisplay: ReactiveState<AppDisplay>;
   public noteKeysSorted: ReactiveState<Array<string>>;
+  private mediaMobile: boolean;
   constructor(
     notes: ReactiveState<Map<string, Note> | null>,
     currentNoteKey: ReactiveState<string>,
     isNoteOpen: ReactiveState<boolean>,
     appDisplay: ReactiveState<AppDisplay>,
-    noteKeysSorted: ReactiveState<Array<string>>
+    noteKeysSorted: ReactiveState<Array<string>>,
+    mediaMobile: boolean
   ) {
     this.notes = notes;
     this.currentNoteKey = currentNoteKey;
     this.isNoteOpen = isNoteOpen;
     this.appDisplay = appDisplay;
     this.noteKeysSorted = noteKeysSorted;
+    this.mediaMobile = mediaMobile;
   }
   setCurrentNote(key: string) {
-    if (this.appDisplay.get === "Grid") {
+    if (this.appDisplay.get === "Grid" || this.mediaMobile) {
       this.appDisplay.set("Hidden");
     }
     this.isNoteOpen.set(true);

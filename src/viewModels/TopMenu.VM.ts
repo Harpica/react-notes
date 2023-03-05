@@ -20,6 +20,7 @@ export class TopMenuVM {
   private notes: ReactiveState<Map<string, Note> | null>;
   private textStyle: TextStyle;
   private noteKeysSorted: ReactiveState<Array<string>>;
+  private mediaMobile: boolean;
   constructor(
     appDisplay: ReactiveState<AppDisplay>,
     isNoteOpen: ReactiveState<boolean>,
@@ -27,7 +28,8 @@ export class TopMenuVM {
     isDeleteModalOpen: ReactiveState<boolean>,
     noteKey: ReactiveState<string>,
     notes: ReactiveState<Map<string, Note> | null>,
-    noteKeysSorted: ReactiveState<Array<string>>
+    noteKeysSorted: ReactiveState<Array<string>>,
+    mediaMobile: boolean
   ) {
     this.appDisplay = appDisplay;
     this.isNoteOpen = isNoteOpen;
@@ -37,17 +39,18 @@ export class TopMenuVM {
     this.notes = notes;
     this.textStyle = TextStyle.NONE;
     this.noteKeysSorted = noteKeysSorted;
+    this.mediaMobile = mediaMobile;
   }
   set setDisplay(value: AppDisplay) {
     this.appDisplay.set(value);
-    if (value === "Grid") {
+    if (value === "Grid" || this.mediaMobile) {
       this.isNoteOpen.set(false);
     } else {
       this.isNoteOpen.set(true);
     }
   }
   startNewNote() {
-    if (this.appDisplay.get === "Grid") {
+    if (this.appDisplay.get === "Grid" || this.mediaMobile) {
       this.appDisplay.set("Hidden");
     }
     this.isNoteOpen.set(true);

@@ -8,6 +8,7 @@ import {
   ListItemText,
 } from "@mui/material";
 import Typography from "@mui/material/Typography";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import { NoteListVM } from "../../viewModels/NoteList.VM";
 
@@ -23,6 +24,10 @@ const style = {
     height: "100%",
     maxWidth: "320px",
     flex: 1,
+    backgroundColor: "#1976d217",
+  },
+  boxMobile: {
+    width: "100%",
   },
   list: {
     overflow: "auto",
@@ -36,6 +41,7 @@ const style = {
   },
   listTitle: {
     fontWeight: "bold",
+    color: "#1976d2",
   },
 };
 
@@ -44,8 +50,9 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = React.memo(({ vm }) => {
+  const mediaMobile = useMediaQuery("(max-width:600px)");
   return (
-    <Box sx={style.box}>
+    <Box sx={mediaMobile ? style.boxMobile : style.box}>
       <Typography>Today</Typography>
       <Divider />
       <List sx={style.list}>

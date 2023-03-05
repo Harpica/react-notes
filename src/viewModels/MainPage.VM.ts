@@ -6,6 +6,7 @@ export type AppDisplay = "List" | "Grid" | "Hidden";
 export class MainPageVM {
   private notes: ReactiveState<Map<string, Note> | null>;
   private noteKeysSorted: ReactiveState<Array<string>>;
+
   constructor(
     notes: ReactiveState<Map<string, Note> | null>,
     noteKeysSorted: ReactiveState<Array<string>>
@@ -27,6 +28,7 @@ export class MainPageVM {
       this.setNoteKeys(notes);
     }
   }
+
   private setNoteKeys(notes: Map<string, Note>) {
     this.noteKeysSorted.set(
       Array.from(notes.keys()).sort((a, b) => parseInt(b) - parseInt(a))

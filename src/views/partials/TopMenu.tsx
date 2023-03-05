@@ -6,6 +6,11 @@ import MenuItem from "@mui/material/MenuItem";
 import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
 import { styled, alpha } from "@mui/material/styles";
+import ViewListIcon from "@mui/icons-material/ViewList";
+import GridViewIcon from "@mui/icons-material/GridView";
+import DeleteIcon from "@mui/icons-material/Delete";
+import NoteAddIcon from "@mui/icons-material/NoteAdd";
+import FormatColorTextIcon from "@mui/icons-material/FormatColorText";
 import { TextStyle, TopMenuVM } from "../../viewModels/TopMenu.VM";
 import DeleteModal from "./Modal";
 import { AppDisplay } from "../../viewModels/MainPage.VM";
@@ -15,9 +20,9 @@ import useReactive, { ReactiveState } from "../../utils/hooks/useReactive.hook";
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.black, 0.15),
+  backgroundColor: alpha(theme.palette.primary.main, 0.15),
   "&:hover": {
-    backgroundColor: alpha(theme.palette.common.black, 0.25),
+    backgroundColor: alpha(theme.palette.primary.main, 0.25),
   },
   marginLeft: 0,
   width: "100%",
@@ -28,6 +33,7 @@ const Search = styled("div")(({ theme }) => ({
 }));
 
 const SearchIconWrapper = styled("div")(({ theme }) => ({
+  color: theme.palette.primary.main,
   padding: theme.spacing(0, 2),
   height: "100%",
   position: "absolute",
@@ -41,6 +47,7 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "inherit",
   "& .MuiInputBase-input": {
+    color: "black",
     padding: theme.spacing(1, 1, 1, 0),
     // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
@@ -61,6 +68,7 @@ interface TopMenuProps {
   noteKey: ReactiveState<string>;
   notes: ReactiveState<Map<string, Note> | null>;
   noteKeysSorted: ReactiveState<Array<string>>;
+  mediaMobile: boolean;
 }
 
 const TopMenu: React.FC<TopMenuProps> = ({
@@ -69,6 +77,7 @@ const TopMenu: React.FC<TopMenuProps> = ({
   noteKey,
   notes,
   noteKeysSorted,
+  mediaMobile,
 }) => {
   const isMenuOpen = useReactive(false);
   const isDeleteModalOpen = useReactive(false);
@@ -80,7 +89,8 @@ const TopMenu: React.FC<TopMenuProps> = ({
     isDeleteModalOpen,
     noteKey,
     notes,
-    noteKeysSorted
+    noteKeysSorted,
+    mediaMobile
   );
 
   return (
@@ -90,20 +100,20 @@ const TopMenu: React.FC<TopMenuProps> = ({
         sx={{ backgroundColor: "white", width: "100%" }}
       >
         <Toolbar sx={{ justifyContent: "space-between" }}>
-          <ButtonGroup variant="text" aria-label="text button group">
+          <ButtonGroup variant="text" aria-label="list and grid view of notes">
             <Button
               onClick={() => {
                 vm.setDisplay = "List";
               }}
             >
-              List
+              <ViewListIcon />
             </Button>
             <Button
               onClick={() => {
                 vm.setDisplay = "Grid";
               }}
             >
-              Grid
+              <GridViewIcon />
             </Button>
           </ButtonGroup>
           <Button
@@ -112,18 +122,18 @@ const TopMenu: React.FC<TopMenuProps> = ({
               vm.openDeleteModal();
             }}
           >
-            Delete
+            <DeleteIcon />
           </Button>
-          <ButtonGroup variant="text" aria-label="text button group">
+          <ButtonGroup variant="text" aria-label="add and edit note">
             <Button
               onClick={() => {
                 vm.startNewNote();
               }}
             >
-              New
+              <NoteAddIcon />
             </Button>
             <Button className="menu-button" onClick={() => vm.openMenu()}>
-              Edit
+              <FormatColorTextIcon />
             </Button>
             <Menu
               id="basic-menu"
