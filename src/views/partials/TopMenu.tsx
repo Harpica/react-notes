@@ -9,8 +9,8 @@ import { styled, alpha } from "@mui/material/styles";
 import { TextStyle, TopMenuVM } from "../../viewModels/TopMenu.VM";
 import useReactive, { ReactiveState } from "../../utils/hooks/useReactive.hook";
 import { AppDisplay } from "../../viewModels/MainPage.VM";
-import useLocalStorage from "../../utils/hooks/useLocalStorage";
 import { Note } from "../../viewModels/Note.VM";
+import DeleteModal from "./Modal";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -70,98 +70,106 @@ const TopMenu: React.FC<TopMenuProps> = ({
   notes,
 }) => {
   const isMenuOpen = useReactive(false);
+  const isDeleteModalOpen = useReactive(false);
   const vm = new TopMenuVM(
     appDisplay,
     isNoteOpen,
     isMenuOpen,
+    isDeleteModalOpen,
     currentNote,
     noteKey,
     notes
   );
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: "white", width: "100%" }}>
-      <Toolbar sx={{ justifyContent: "space-between" }}>
-        <ButtonGroup variant="text" aria-label="text button group">
-          <Button
-            onClick={() => {
-              vm.setDisplay = "List";
-            }}
-          >
-            List
-          </Button>
-          <Button
-            onClick={() => {
-              vm.setDisplay = "Grid";
-            }}
-          >
-            Grid
-          </Button>
-        </ButtonGroup>
-        <Button
-          variant="text"
-          onClick={() => {
-            vm.deleteNote(noteKey.get);
-          }}
-        >
-          Delete
-        </Button>
-        <ButtonGroup variant="text" aria-label="text button group">
-          <Button
-            onClick={() => {
-              vm.startNewNote();
-            }}
-          >
-            New
-          </Button>
-          <Button className="menu-button" onClick={() => vm.openMenu()}>
-            Edit
-          </Button>
-          <Menu
-            id="basic-menu"
-            anchorEl={vm.getMenuAnchorEl()}
-            open={vm.isMenuOpen.get}
-            onClose={() => {
-              vm.closeMenu();
-            }}
-            MenuListProps={{
-              "aria-labelledby": "basic-button",
-            }}
-          >
-            <MenuItem
-              onClick={(e) => {
-                vm.handleStyleButtonClick(TextStyle.BOLD);
-              }}
-            >
-              Bold
-            </MenuItem>
-            <MenuItem
+    <>
+      <AppBar
+        position="static"
+        sx={{ backgroundColor: "white", width: "100%" }}
+      >
+        <Toolbar sx={{ justifyContent: "space-between" }}>
+          <ButtonGroup variant="text" aria-label="text button group">
+            <Button
               onClick={() => {
-                vm.handleStyleButtonClick(TextStyle.ITALIC);
+                vm.setDisplay = "List";
               }}
             >
-              Italic
-            </MenuItem>
-            <MenuItem
+              List
+            </Button>
+            <Button
               onClick={() => {
-                vm.handleStyleButtonClick(TextStyle.CODE);
+                vm.setDisplay = "Grid";
               }}
             >
-              Code
-            </MenuItem>
-          </Menu>
-        </ButtonGroup>
-        <Search>
-          <SearchIconWrapper>
-            <SearchIcon />
-          </SearchIconWrapper>
-          <StyledInputBase
-            placeholder="Search…"
-            inputProps={{ "aria-label": "search" }}
-          />
-        </Search>
-      </Toolbar>
-    </AppBar>
+              Grid
+            </Button>
+          </ButtonGroup>
+          <Button
+            variant="text"
+            onClick={() => {
+              vm.openDeleteModal();
+            }}
+          >
+            Delete
+          </Button>
+          <ButtonGroup variant="text" aria-label="text button group">
+            <Button
+              onClick={() => {
+                vm.startNewNote();
+              }}
+            >
+              New
+            </Button>
+            <Button className="menu-button" onClick={() => vm.openMenu()}>
+              Edit
+            </Button>
+            <Menu
+              id="basic-menu"
+              anchorEl={vm.getMenuAnchorEl()}
+              open={vm.isMenuOpen.get}
+              onClose={() => {
+                vm.closeMenu();
+              }}
+              MenuListProps={{
+                "aria-labelledby": "basic-button",
+              }}
+            >
+              <MenuItem
+                onClick={(e) => {
+                  vm.handleStyleButtonClick(TextStyle.BOLD);
+                }}
+              >
+                Bold
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  vm.handleStyleButtonClick(TextStyle.ITALIC);
+                }}
+              >
+                Italic
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  vm.handleStyleButtonClick(TextStyle.CODE);
+                }}
+              >
+                Code
+              </MenuItem>
+            </Menu>
+          </ButtonGroup>
+          <Search>
+            <SearchIconWrapper>
+              <SearchIcon />
+            </SearchIconWrapper>
+            <StyledInputBase
+              placeholder="Search…"
+              inputProps={{ "aria-label": "search" }}
+            />
+          </Search>
+        </Toolbar>
+      </AppBar>
+      <DeleteModal vm={vm} />
+    </>
   );
 };
 

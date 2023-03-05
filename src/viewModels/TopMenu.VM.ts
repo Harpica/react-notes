@@ -3,7 +3,6 @@ import { ReactiveState } from "../utils/hooks/useReactive.hook";
 import { AppDisplay } from "./MainPage.VM";
 import { Note } from "./Note.VM";
 
-// export type TextStyle = "Bold" | "Italic" | "Underlined" | "None";
 export enum TextStyle {
   BOLD = "Bold",
   ITALIC = "Italic",
@@ -15,6 +14,7 @@ export class TopMenuVM {
   private appDisplay: ReactiveState<AppDisplay>;
   private isNoteOpen: ReactiveState<boolean>;
   public isMenuOpen: ReactiveState<boolean>;
+  public isDeleteModalOpen: ReactiveState<boolean>;
   private currentNote: ReactiveState<Note>;
   private noteKey: ReactiveState<string>;
   private notes: ReactiveState<Map<string, Note> | null>;
@@ -23,6 +23,7 @@ export class TopMenuVM {
     appDisplay: ReactiveState<AppDisplay>,
     isNoteOpen: ReactiveState<boolean>,
     isMenuOpen: ReactiveState<boolean>,
+    isDeleteModalOpen: ReactiveState<boolean>,
     currentNote: ReactiveState<Note>,
     noteKey: ReactiveState<string>,
     notes: ReactiveState<Map<string, Note> | null>
@@ -30,6 +31,7 @@ export class TopMenuVM {
     this.appDisplay = appDisplay;
     this.isNoteOpen = isNoteOpen;
     this.isMenuOpen = isMenuOpen;
+    this.isDeleteModalOpen = isDeleteModalOpen;
     this.currentNote = currentNote;
     this.noteKey = noteKey;
     this.notes = notes;
@@ -54,13 +56,13 @@ export class TopMenuVM {
       this.notes.set(this.notes.get.set(date, { title: "Title", body: "" }));
     }
   }
-  deleteNote(key: string) {
+  deleteNote() {
     if (this.notes.get) {
       let notes = this.notes.get;
-      notes.delete(key);
+      notes.delete(this.noteKey.get);
       this.notes.set(notes);
     }
-    window.localStorage.removeItem(key);
+    window.localStorage.removeItem(this.noteKey.get);
     this.noteKey.set(
       (() => {
         const keys = Object.keys(localStorage);
@@ -79,6 +81,13 @@ export class TopMenuVM {
   closeMenu() {
     this.isMenuOpen.set(false);
   }
+  openDeleteModal() {
+    this.isDeleteModalOpen.set(true);
+  }
+  closeDeleteModal() {
+    this.isDeleteModalOpen.set(false);
+  }
+
   handleStyleButtonClick(textStyle: TextStyle) {
     this.textStyle = textStyle;
     this.styleText();
@@ -95,11 +104,11 @@ export class TopMenuVM {
           selection.focusOffset
         );
         const anchorNodeValue = selection.anchorNode.nodeValue;
+        console.log(anchorNodeValue);
         const indexOfSelectionStart = selection.anchorOffset;
         const indexOfSelectionEnd = selection.focusOffset;
 
         if (selection.anchorNode === selection.focusNode) {
-          console.log("the same nodes");
           let start = indexOfSelectionStart;
           let end = indexOfSelectionEnd;
           if (indexOfSelectionEnd < indexOfSelectionStart) {
@@ -113,6 +122,10 @@ export class TopMenuVM {
             "+$+" +
             anchorNodeValue?.slice(end);
           selection.anchorNode.nodeValue = newValue;
+          console.log(
+            "the same nodes, new value",
+            selection.anchorNode.nodeValue
+          );
         } else {
           const newStartValue =
             anchorNodeValue?.slice(0, indexOfSelectionStart) +
@@ -126,7 +139,7 @@ export class TopMenuVM {
             "+$+" +
             focusNodeValue?.slice(indexOfSelectionEnd);
           selection.focusNode.nodeValue = newEndValue;
-          console.log(newEndValue, focusNodeValue, indexOfSelectionEnd);
+          console.log(selection.anchorNode.nodeValue);
         }
       }
     }
