@@ -7,6 +7,7 @@ import { Box } from "@mui/system";
 const style = {
   box: {
     backgroundColor: "#1976d217",
+    width: "100%",
   },
   gridContainer: {
     width: "100%",
