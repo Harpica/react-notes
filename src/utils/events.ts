@@ -21,4 +21,8 @@ function trigger(eventType: string, data?: any) {
   console.log("trigger");
 }
 
-export { on, once, off, trigger };
+function isCustomEvent(event: Event): event is CustomEvent {
+  return "detail" in event;
+}
+
+export { on, once, off, trigger, isCustomEvent };

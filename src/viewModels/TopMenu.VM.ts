@@ -3,7 +3,13 @@ import { ReactiveState } from "../utils/hooks/useReactive.hook";
 import { AppDisplay } from "./MainPage.VM";
 import { Note } from "./Note.VM";
 
-export type TextStyle = "Bold" | "Italic" | "Underlined" | "None";
+// export type TextStyle = "Bold" | "Italic" | "Underlined" | "None";
+export enum TextStyle {
+  BOLD = "Bold",
+  ITALIC = "Italic",
+  CODE = "Code",
+  NONE = "None",
+}
 
 export class TopMenuVM {
   private appDisplay: ReactiveState<AppDisplay>;
@@ -12,6 +18,7 @@ export class TopMenuVM {
   private currentNote: ReactiveState<Note>;
   private noteKey: ReactiveState<string>;
   private notes: ReactiveState<Map<string, Note> | null>;
+  private textStyle: TextStyle;
   constructor(
     appDisplay: ReactiveState<AppDisplay>,
     isNoteOpen: ReactiveState<boolean>,
@@ -26,6 +33,7 @@ export class TopMenuVM {
     this.currentNote = currentNote;
     this.noteKey = noteKey;
     this.notes = notes;
+    this.textStyle = TextStyle.NONE;
   }
   set setDisplay(value: AppDisplay) {
     this.appDisplay.set(value);
@@ -71,7 +79,12 @@ export class TopMenuVM {
   closeMenu() {
     this.isMenuOpen.set(false);
   }
-  styleText() {
+  handleStyleButtonClick(textStyle: TextStyle) {
+    this.textStyle = textStyle;
+    this.styleText();
+    this.closeMenu();
+  }
+  private styleText() {
     if (window.getSelection() !== null) {
       const selection = window.getSelection() as Selection;
       if (selection.anchorNode !== null && selection.focusNode !== null) {
@@ -117,6 +130,6 @@ export class TopMenuVM {
         }
       }
     }
-    trigger("test formatting");
+    trigger("test formatting", { style: this.textStyle });
   }
 }

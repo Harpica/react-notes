@@ -4,8 +4,9 @@ import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import useLocalStorage from "../../utils/hooks/useLocalStorage";
 import { Note, NoteVM } from "../../viewModels/Note.VM";
 import React, { useEffect, useRef, useCallback, useReducer } from "react";
-import { off, on } from "../../utils/events";
+import { isCustomEvent, off, on } from "../../utils/events";
 import { ReactiveState } from "../../utils/hooks/useReactive.hook";
+import { TextStyle } from "../../viewModels/TopMenu.VM";
 
 interface NoteViewProps {
   note: ReactiveState<Note>;
@@ -17,8 +18,9 @@ const NoteView: React.FC<NoteViewProps> = ({ note, noteKey }) => {
   const vm = new NoteVM(note, noteKey, defaultCurrentNoteValue);
 
   const saveAndRerender = useCallback(
-    (reactMarkdowm: HTMLElement) => {
-      vm.saveNote(reactMarkdowm);
+    (reactMarkdowm: HTMLElement, textStyle: TextStyle) => {
+      console.log(textStyle);
+      vm.saveNote(reactMarkdowm, textStyle);
       vm.setCurrentNoteValue();
     },
     [vm]
@@ -28,8 +30,11 @@ const NoteView: React.FC<NoteViewProps> = ({ note, noteKey }) => {
     const reactMarkdowm = document.querySelector(
       ".react-markdowm"
     ) as HTMLElement;
-    const save = () => {
-      saveAndRerender(reactMarkdowm);
+    const save = (e: Event) => {
+      if (isCustomEvent(e)) {
+        console.log(e.detail, e.detail.style);
+        saveAndRerender(reactMarkdowm, e.detail.style);
+      }
     };
 
     on("test formatting", save);
@@ -70,16 +75,15 @@ const NoteView: React.FC<NoteViewProps> = ({ note, noteKey }) => {
         suppressContentEditableWarning={true}
         onInput={(e) => {
           vm.saveNote(
-            e.currentTarget.querySelector(".react-markdowm") as HTMLElement
+            e.currentTarget.querySelector(".react-markdowm") as HTMLElement,
+            TextStyle.NONE
           );
         }}
       >
         <ReactMarkdown className={"react-markdowm"}>
-          {/* {defaultValue.current.body === ""
+          {defaultCurrentNoteValue.current.body === ""
             ? "Start writting..."
-            : defaultValue.current.body} */}
-          {/* {vm.currentNote.get.body} */}
-          {defaultCurrentNoteValue.current.body}
+            : defaultCurrentNoteValue.current.body}
         </ReactMarkdown>
       </Box>
     </Box>

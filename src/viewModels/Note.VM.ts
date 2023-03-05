@@ -1,5 +1,6 @@
 import { ReactiveState } from "../utils/hooks/useReactive.hook";
 import TurndownService from "turndown";
+import { TextStyle } from "./TopMenu.VM";
 
 export interface Note {
   title: string;
@@ -7,6 +8,13 @@ export interface Note {
 }
 
 const turndownService = new TurndownService();
+
+const mapToReplaceWith = new Map<TextStyle, string>([
+  [TextStyle.BOLD, "**"],
+  [TextStyle.ITALIC, "_"],
+  [TextStyle.CODE, "`"],
+  [TextStyle.NONE, ""],
+]);
 
 export class NoteVM {
   public currentNote: ReactiveState<Note>;
@@ -46,9 +54,19 @@ export class NoteVM {
     this.currentNote.set({ title: this.currentNote.get.title, body: body });
   }
 
-  saveNote(HtmlElement: HTMLElement) {
+  saveNote(HtmlElement: HTMLElement, textStyle: TextStyle) {
     let markdown = turndownService.turndown(HtmlElement);
-    markdown = markdown.replaceAll("+$+", "**").replaceAll("****", "");
+    if (textStyle !== TextStyle.NONE) {
+      const replaceValue = mapToReplaceWith.get(textStyle);
+      if (replaceValue) {
+        markdown = markdown
+          .replaceAll("+$+", replaceValue)
+          // if there is "****" or the same, we delete this symbols and text loses decoration
+          .replaceAll(`${replaceValue + replaceValue}`, "");
+      } else {
+        console.error("No such textStyle");
+      }
+    }
     this.markdown = markdown;
     this.currentNote.set({ title: this.currentNote.get.title, body: markdown });
   }

@@ -22,7 +22,7 @@ interface MainPageProps {
 const MainPage: React.FC<MainPageProps> = ({ currentNoteKey, appDisplay }) => {
   const isNoteOpen = useReactive<boolean>(true);
   // isMenuOpen = ///
-  const textStyle = useReactive<TextStyle>("None");
+  const textStyle = useReactive<TextStyle>(TextStyle.NONE);
   const currentNote = useLocalStorage<Note>(currentNoteKey.get, {
     title: "Title",
     body: "",

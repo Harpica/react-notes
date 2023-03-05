@@ -6,7 +6,7 @@ import MenuItem from "@mui/material/MenuItem";
 import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
 import { styled, alpha } from "@mui/material/styles";
-import { TopMenuVM } from "../../viewModels/TopMenu.VM";
+import { TextStyle, TopMenuVM } from "../../viewModels/TopMenu.VM";
 import useReactive, { ReactiveState } from "../../utils/hooks/useReactive.hook";
 import { AppDisplay } from "../../viewModels/MainPage.VM";
 import useLocalStorage from "../../utils/hooks/useLocalStorage";
@@ -129,26 +129,25 @@ const TopMenu: React.FC<TopMenuProps> = ({
             }}
           >
             <MenuItem
-              onClick={() => {
-                vm.styleText();
-                vm.closeMenu();
+              onClick={(e) => {
+                vm.handleStyleButtonClick(TextStyle.BOLD);
               }}
             >
               Bold
             </MenuItem>
             <MenuItem
               onClick={() => {
-                vm.closeMenu();
+                vm.handleStyleButtonClick(TextStyle.ITALIC);
               }}
             >
               Italic
             </MenuItem>
             <MenuItem
               onClick={() => {
-                vm.closeMenu();
+                vm.handleStyleButtonClick(TextStyle.CODE);
               }}
             >
-              Underlined
+              Code
             </MenuItem>
           </Menu>
         </ButtonGroup>
