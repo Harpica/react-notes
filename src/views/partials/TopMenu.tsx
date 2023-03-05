@@ -66,7 +66,7 @@ interface TopMenuProps {
   appDisplay: ReactiveState<AppDisplay>;
   isNoteOpen: ReactiveState<boolean>;
   noteKey: ReactiveState<string>;
-  notes: ReactiveState<Map<string, Note> | null>;
+  notes: ReactiveState<Map<string, Note>>;
   noteKeysSorted: ReactiveState<Array<string>>;
   mediaMobile: boolean;
 }

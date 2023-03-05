@@ -24,13 +24,13 @@ export class NoteVM {
   private noteRef: React.MutableRefObject<Note>;
   public date: string;
   private markdown: string;
-  private notes: ReactiveState<Map<string, Note> | null>;
+  private notes: ReactiveState<Map<string, Note>>;
 
   constructor(
     note: ReactiveState<Note>,
     noteKey: ReactiveState<string>,
     noteRef: React.MutableRefObject<Note>,
-    notes: ReactiveState<Map<string, Note> | null>
+    notes: ReactiveState<Map<string, Note>>
   ) {
     this.notes = notes;
     this.currentNote = note;
@@ -51,6 +51,10 @@ export class NoteVM {
     this.updateNoteMap(title, this.currentNote.get.body);
   }
 
+  saveNoteAfterTextFormat(reactMarkdowm: HTMLElement, textStyle: TextStyle) {
+    this.saveNote(reactMarkdowm, textStyle);
+    this.setCurrentNoteValue();
+  }
   saveNote(HtmlElement: HTMLElement, textStyle?: TextStyle) {
     this.setMarkdown(HtmlElement);
     if (textStyle) {
@@ -62,10 +66,6 @@ export class NoteVM {
       body: this.markdown,
     });
     this.updateNoteMap(this.currentNote.get.title, this.markdown);
-  }
-  saveNoteAfterTextFormat(reactMarkdowm: HTMLElement, textStyle: TextStyle) {
-    this.saveNote(reactMarkdowm, textStyle);
-    this.setCurrentNoteValue();
   }
   private updateNoteMap(title: string, body: string) {
     const notes = this.notes.get;
@@ -92,9 +92,9 @@ export class NoteVM {
           .replaceAll("+$+", replaceValue)
           // if there is "****" or the same, we delete this symbols and text loses decoration
           .replaceAll(`${replaceValue + replaceValue}`, "");
-      } else {
-        console.error("No such textStyle");
       }
+    } else {
+      console.error("No such textStyle");
     }
   }
   private renderDate() {

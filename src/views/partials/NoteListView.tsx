@@ -8,7 +8,7 @@ import Sidebar from "./Sidebar";
 import GridView from "./GridView";
 
 interface NoteListViewProps {
-  notes: ReactiveState<Map<string, Note> | null>;
+  notes: ReactiveState<Map<string, Note>>;
   currentNoteKey: ReactiveState<string>;
   appDisplay: ReactiveState<AppDisplay>;
   isNoteOpen: ReactiveState<boolean>;

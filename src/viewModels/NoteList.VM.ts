@@ -3,14 +3,14 @@ import { Note } from "./Note.VM";
 import { ReactiveState } from "../utils/hooks/useReactive.hook";
 
 export class NoteListVM {
-  public notes: ReactiveState<Map<string, Note> | null>;
+  public notes: ReactiveState<Map<string, Note>>;
   private currentNoteKey: ReactiveState<string>;
   private isNoteOpen: ReactiveState<boolean>;
   private appDisplay: ReactiveState<AppDisplay>;
   public noteKeysSorted: ReactiveState<Array<string>>;
   private mediaMobile: boolean;
   constructor(
-    notes: ReactiveState<Map<string, Note> | null>,
+    notes: ReactiveState<Map<string, Note>>,
     currentNoteKey: ReactiveState<string>,
     isNoteOpen: ReactiveState<boolean>,
     appDisplay: ReactiveState<AppDisplay>,

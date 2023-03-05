@@ -17,7 +17,7 @@ export class TopMenuVM {
   public isMenuOpen: ReactiveState<boolean>;
   public isDeleteModalOpen: ReactiveState<boolean>;
   private noteKey: ReactiveState<string>;
-  private notes: ReactiveState<Map<string, Note> | null>;
+  private notes: ReactiveState<Map<string, Note>>;
   private textStyle: TextStyle;
   private noteKeysSorted: ReactiveState<Array<string>>;
   private mediaMobile: boolean;
@@ -27,7 +27,7 @@ export class TopMenuVM {
     isMenuOpen: ReactiveState<boolean>,
     isDeleteModalOpen: ReactiveState<boolean>,
     noteKey: ReactiveState<string>,
-    notes: ReactiveState<Map<string, Note> | null>,
+    notes: ReactiveState<Map<string, Note>>,
     noteKeysSorted: ReactiveState<Array<string>>,
     mediaMobile: boolean
   ) {

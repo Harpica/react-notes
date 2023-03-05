@@ -24,18 +24,24 @@ const MainPage: React.FC<MainPageProps> = ({ currentNoteKey, appDisplay }) => {
     title: "Title",
     body: "",
   });
-  const notes = useReactive<Map<string, Note> | null>(null);
-  const noteKeysSorted = useReactive<Array<string>>([]);
 
-  const vm = new MainPageVM(notes, noteKeysSorted);
+  const vm = new MainPageVM();
+  const notes = useReactive<Map<string, Note>>(
+    (() => {
+      return vm.getAllNotes();
+    })()
+  );
+  const noteKeysSorted = useReactive<Array<string>>(
+    (() => {
+      return vm.setNoteKeys(notes.get);
+    })()
+  );
 
   useEffect(() => {
-    vm.getAllNotes();
     if (mediaMobile && appDisplay.get === "Hidden") {
       isNoteOpen.set(true);
     }
   }, []);
-
   return (
     <>
       <CssBaseline />

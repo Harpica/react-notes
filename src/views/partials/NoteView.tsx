@@ -3,7 +3,6 @@ import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import { Box } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { Note, NoteVM } from "../../viewModels/Note.VM";
-import { TextStyle } from "../../viewModels/TopMenu.VM";
 import { isCustomEvent, off, on } from "../../utils/events";
 import { ReactiveState } from "../../utils/hooks/useReactive.hook";
 
@@ -22,7 +21,7 @@ const style = {
 interface NoteViewProps {
   note: ReactiveState<Note>;
   noteKey: ReactiveState<string>;
-  notes: ReactiveState<Map<string, Note> | null>;
+  notes: ReactiveState<Map<string, Note>>;
 }
 
 const NoteView: React.FC<NoteViewProps> = ({ note, noteKey, notes }) => {
@@ -65,14 +64,17 @@ const NoteView: React.FC<NoteViewProps> = ({ note, noteKey, notes }) => {
         suppressContentEditableWarning={true}
         onInput={(e) => {
           vm.saveNote(
-            e.currentTarget.querySelector(".react-markdown") as HTMLElement,
-            TextStyle.NONE
+            e.currentTarget.querySelector(".react-markdown") as HTMLElement
           );
         }}
       >
         {/* You can uncomment below to see markdown changes in real time */}
         {/* <p>{note.get.body}</p> */}
-        <ReactMarkdown className={"react-markdown"}>
+        <ReactMarkdown
+          className={"react-markdown"}
+          // key is needed to rerender component when ref is updated
+          key={defaultCurrentNoteValue.current.body}
+        >
           {defaultCurrentNoteValue.current.body === ""
             ? "Start writting..."
             : defaultCurrentNoteValue.current.body}
@@ -82,4 +84,4 @@ const NoteView: React.FC<NoteViewProps> = ({ note, noteKey, notes }) => {
   );
 };
 
-export default React.memo(NoteView);
+export default NoteView;
