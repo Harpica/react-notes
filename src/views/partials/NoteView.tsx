@@ -1,12 +1,23 @@
+import React, { useEffect, useRef } from "react";
+import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import { Box } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import { ReactMarkdown } from "react-markdown/lib/react-markdown";
-import useLocalStorage from "../../utils/hooks/useLocalStorage";
 import { Note, NoteVM } from "../../viewModels/Note.VM";
-import React, { useEffect, useRef, useCallback, useReducer } from "react";
+import { TextStyle } from "../../viewModels/TopMenu.VM";
 import { isCustomEvent, off, on } from "../../utils/events";
 import { ReactiveState } from "../../utils/hooks/useReactive.hook";
-import { TextStyle } from "../../viewModels/TopMenu.VM";
+
+const style = {
+  box: {
+    display: "flex",
+    flexDirection: "column",
+    width: "100%",
+    height: "100%",
+    p: 2,
+    flex: 2,
+    overflow: "clip",
+  },
+};
 
 interface NoteViewProps {
   note: ReactiveState<Note>;
@@ -17,26 +28,17 @@ const NoteView: React.FC<NoteViewProps> = ({ note, noteKey }) => {
   const defaultCurrentNoteValue = useRef(note.get);
   const vm = new NoteVM(note, noteKey, defaultCurrentNoteValue);
 
-  const saveAndRerender = (
-    reactMarkdowm: HTMLElement,
-    textStyle: TextStyle
-  ) => {
-    vm.saveNote(reactMarkdowm, textStyle);
-    vm.setCurrentNoteValue();
-    console.log("reading new ref", defaultCurrentNoteValue.current.body);
-  };
-
+  // Every time currentNote changes, we find once again ReactMarkdown element
   useEffect(() => {
     const reactMarkdowm = document.querySelector(
       ".react-markdowm"
     ) as HTMLElement;
     const save = (e: Event) => {
       if (isCustomEvent(e)) {
-        console.log(e.detail, e.detail.style);
-        saveAndRerender(reactMarkdowm, e.detail.style);
+        vm.saveNoteAfterTextFormat(reactMarkdowm, e.detail.style);
       }
     };
-
+    // Set lisnener to text formatting
     on("test formatting", save);
 
     return () => {
@@ -45,17 +47,7 @@ const NoteView: React.FC<NoteViewProps> = ({ note, noteKey }) => {
   }, [note.get]);
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        width: "100%",
-        height: "100%",
-        p: 2,
-        flex: 2,
-        overflow: "clip",
-      }}
-    >
+    <Box sx={style.box}>
       <Typography>{vm.date}</Typography>
 
       <h1

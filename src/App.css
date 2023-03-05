@@ -8,11 +8,3 @@
 [contenteditable] {
   outline: 0px solid transparent;
 }
-
-button:focus,
-button:focus-visible {
-  outline: none;
-}
-.Mui-focusVisible {
-  outline: none;
-}

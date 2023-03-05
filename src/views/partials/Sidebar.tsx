@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Box,
   Divider,
@@ -7,9 +8,33 @@ import {
   ListItemText,
 } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import React, { useEffect } from "react";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import { NoteListVM } from "../../viewModels/NoteList.VM";
+
+const style = {
+  box: {
+    flexDirection: "column",
+    position: "static",
+    pt: 2,
+    borderWidth: 0,
+    borderStyle: "solid",
+    borderColor: "rgba(0, 0, 0, 0.12)",
+    borderRightWidth: "thin",
+    height: "100%",
+    maxWidth: "320px",
+    flex: 1,
+  },
+  list: {
+    overflow: "auto",
+    maxHeight: "75vh",
+  },
+  listButton: {
+    flexDirection: "column",
+    overflow: "hidden",
+    alignItems: "flex-start",
+    maxHeight: "140px",
+  },
+};
 
 interface SidebarProps {
   vm: NoteListVM;
@@ -17,34 +42,16 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = React.memo(({ vm }) => {
   return (
-    <Box
-      sx={{
-        flexDirection: "column",
-        position: "static",
-        pt: 2,
-        borderWidth: 0,
-        borderStyle: "solid",
-        borderColor: "rgba(0, 0, 0, 0.12)",
-        borderRightWidth: "thin",
-        height: "100%",
-        maxWidth: "320px",
-        flex: 1,
-      }}
-    >
+    <Box sx={style.box}>
       <Typography>Сегодня</Typography>
       <Divider />
-      <List sx={{ overflow: "auto", maxHeight: "75vh" }}>
+      <List sx={style.list}>
         {vm.notes.get &&
           vm.noteKeysSorted.get.map((key, i) => (
             <ListItem key={i + "note"}>
               <ListItemButton
                 divider={true}
-                sx={{
-                  flexDirection: "column",
-                  overflow: "hidden",
-                  alignItems: "flex-start",
-                  maxHeight: "140px",
-                }}
+                sx={style.listButton}
                 onClick={() => {
                   vm.setCurrentNote(key);
                 }}

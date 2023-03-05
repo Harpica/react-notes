@@ -1,9 +1,7 @@
 import "./App.css";
 import useReactive from "./utils/hooks/useReactive.hook";
 import { AppDisplay } from "./viewModels/MainPage.VM";
-import { Note } from "./viewModels/Note.VM";
 import MainPage from "./views/pages/MainPage";
-export type Notes = { [key: string]: Note };
 
 function App() {
   // If local storage has note(s), key become the latest one,

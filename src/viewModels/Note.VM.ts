@@ -1,14 +1,16 @@
-import { ReactiveState } from "../utils/hooks/useReactive.hook";
 import TurndownService from "turndown";
 import { TextStyle } from "./TopMenu.VM";
+import { ReactiveState } from "../utils/hooks/useReactive.hook";
 
 export interface Note {
   title: string;
   body: string;
 }
 
+// Service to convers html to markdown
 const turndownService = new TurndownService();
 
+// Map for replacing custom markers(+$+) for markdown markers (bold, italic..)
 const mapToReplaceWith = new Map<TextStyle, string>([
   [TextStyle.BOLD, "**"],
   [TextStyle.ITALIC, "_"],
@@ -44,23 +46,35 @@ export class NoteVM {
     }
     this.currentNote.set({ title: title, body: this.currentNote.get.body });
   }
-  saveNoteBody(value: string | null) {
-    let body = "";
-    if (!value) {
-      body = "No notes";
-    } else {
-      body = value;
-    }
-    this.currentNote.set({ title: this.currentNote.get.title, body: body });
-  }
 
-  saveNote(HtmlElement: HTMLElement, textStyle: TextStyle) {
-    let markdown = turndownService.turndown(HtmlElement);
-    console.log("saving note", markdown);
+  saveNote(HtmlElement: HTMLElement, textStyle?: TextStyle) {
+    this.setMarkdown(HtmlElement);
+    if (textStyle) {
+      this.formatText(textStyle);
+    }
+    this.currentNote.set({
+      title: this.currentNote.get.title,
+      body: this.markdown,
+    });
+  }
+  saveNoteAfterTextFormat(reactMarkdowm: HTMLElement, textStyle: TextStyle) {
+    this.saveNote(reactMarkdowm, textStyle);
+    this.setCurrentNoteValue();
+  }
+  private setMarkdown(HtmlElement: HTMLElement) {
+    this.markdown = turndownService.turndown(HtmlElement);
+  }
+  private setCurrentNoteValue() {
+    this.noteRef.current = {
+      title: this.currentNote.get.title,
+      body: this.markdown,
+    };
+  }
+  private formatText(textStyle: TextStyle) {
     if (textStyle !== TextStyle.NONE) {
       const replaceValue = mapToReplaceWith.get(textStyle);
       if (replaceValue) {
-        markdown = markdown
+        this.markdown = this.markdown
           .replaceAll("+$+", replaceValue)
           // if there is "****" or the same, we delete this symbols and text loses decoration
           .replaceAll(`${replaceValue + replaceValue}`, "");
@@ -68,15 +82,6 @@ export class NoteVM {
         console.error("No such textStyle");
       }
     }
-    this.markdown = markdown;
-    this.currentNote.set({ title: this.currentNote.get.title, body: markdown });
-  }
-  setCurrentNoteValue() {
-    this.noteRef.current = {
-      title: this.currentNote.get.title,
-      body: this.markdown,
-    };
-    console.log("setting new ref", this.markdown);
   }
   private renderDate() {
     const date = new Date(parseInt(this.noteKey.get));

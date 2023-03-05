@@ -7,10 +7,10 @@ import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
 import { styled, alpha } from "@mui/material/styles";
 import { TextStyle, TopMenuVM } from "../../viewModels/TopMenu.VM";
-import useReactive, { ReactiveState } from "../../utils/hooks/useReactive.hook";
+import DeleteModal from "./Modal";
 import { AppDisplay } from "../../viewModels/MainPage.VM";
 import { Note } from "../../viewModels/Note.VM";
-import DeleteModal from "./Modal";
+import useReactive, { ReactiveState } from "../../utils/hooks/useReactive.hook";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -31,10 +31,11 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
   padding: theme.spacing(0, 2),
   height: "100%",
   position: "absolute",
-  pointerEvents: "none",
+  zIndex: 2,
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
+  cursor: "initial",
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
@@ -71,6 +72,7 @@ const TopMenu: React.FC<TopMenuProps> = ({
 }) => {
   const isMenuOpen = useReactive(false);
   const isDeleteModalOpen = useReactive(false);
+
   const vm = new TopMenuVM(
     appDisplay,
     isNoteOpen,
@@ -164,12 +166,8 @@ const TopMenu: React.FC<TopMenuProps> = ({
             <StyledInputBase
               placeholder="Search…"
               inputProps={{ "aria-label": "search" }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  vm.searchNotes(e.currentTarget.value);
-                } else {
-                  console.log(e.key);
-                }
+              onChange={(e) => {
+                vm.searchNotes(e.currentTarget.value);
               }}
             />
           </Search>

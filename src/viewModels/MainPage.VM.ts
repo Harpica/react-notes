@@ -1,6 +1,5 @@
-import { Notes } from "../App";
-import { ReactiveState } from "../utils/hooks/useReactive.hook";
 import { Note } from "./Note.VM";
+import { ReactiveState } from "../utils/hooks/useReactive.hook";
 
 export type AppDisplay = "List" | "Grid" | "Hidden";
 

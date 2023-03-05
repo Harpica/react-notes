@@ -1,8 +1,8 @@
-import { trigger } from "../utils/events";
-import { ReactiveState } from "../utils/hooks/useReactive.hook";
-import search from "../utils/search";
 import { AppDisplay } from "./MainPage.VM";
 import { Note } from "./Note.VM";
+import { trigger } from "../utils/events";
+import search from "../utils/search";
+import { ReactiveState } from "../utils/hooks/useReactive.hook";
 
 export enum TextStyle {
   BOLD = "Bold",
@@ -98,14 +98,7 @@ export class TopMenuVM {
     if (window.getSelection() !== null) {
       const selection = window.getSelection() as Selection;
       if (selection.anchorNode !== null && selection.focusNode !== null) {
-        console.log(
-          "start",
-          selection.anchorOffset,
-          "end",
-          selection.focusOffset
-        );
         const anchorNodeValue = selection.anchorNode.nodeValue;
-        console.log(anchorNodeValue);
         const indexOfSelectionStart = selection.anchorOffset;
         const indexOfSelectionEnd = selection.focusOffset;
 
@@ -123,24 +116,18 @@ export class TopMenuVM {
             "+$+" +
             anchorNodeValue?.slice(end);
           selection.anchorNode.nodeValue = newValue;
-          console.log(
-            "the same nodes, new value",
-            selection.anchorNode.nodeValue
-          );
         } else {
           const newStartValue =
             anchorNodeValue?.slice(0, indexOfSelectionStart) +
             "+$+" +
             anchorNodeValue?.slice(indexOfSelectionStart);
           selection.anchorNode.nodeValue = newStartValue;
-          console.log(newStartValue);
           const focusNodeValue = selection.focusNode.nodeValue;
           const newEndValue =
             focusNodeValue?.slice(0, indexOfSelectionEnd) +
             "+$+" +
             focusNodeValue?.slice(indexOfSelectionEnd);
           selection.focusNode.nodeValue = newEndValue;
-          console.log(selection.anchorNode.nodeValue);
         }
       }
     }
@@ -173,7 +160,7 @@ export class TopMenuVM {
         }
       })
       .sort(
-        (a, b) => keysAndComparedValues.get(a)! - keysAndComparedValues.get(b)!
+        (a, b) => keysAndComparedValues.get(b)! - keysAndComparedValues.get(a)!
       );
 
     this.noteKeysSorted.set(noteKeys);
@@ -182,7 +169,7 @@ export class TopMenuVM {
     if (this.notes.get) {
       const note = this.notes.get.get(key);
       if (note) {
-        const textValue = note.body;
+        const textValue = note.body + "" + note.title;
         return search.getCompatedValue(textValue, inputValue);
       }
     }

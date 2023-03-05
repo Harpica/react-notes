@@ -1,3 +1,5 @@
+// Module for custom events
+
 function on(eventType: string, listener: EventListener) {
   document.addEventListener(eventType, listener);
 }
@@ -18,7 +20,6 @@ function once(eventType: string, listener: EventListener) {
 function trigger(eventType: string, data?: any) {
   const event = new CustomEvent(eventType, { detail: data });
   document.dispatchEvent(event);
-  console.log("trigger");
 }
 
 function isCustomEvent(event: Event): event is CustomEvent {

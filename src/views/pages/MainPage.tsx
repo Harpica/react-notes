@@ -1,13 +1,13 @@
-import useLocalStorage from "../../utils/hooks/useLocalStorage";
-import { Note } from "../../viewModels/Note.VM";
 import { useEffect } from "react";
-import useReactive, { ReactiveState } from "../../utils/hooks/useReactive.hook";
-import { AppDisplay, MainPageVM } from "../../viewModels/MainPage.VM";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import TopMenu from "../partials/TopMenu";
 import NoteView from "../partials/NoteView";
 import NoteListView from "../partials/NoteListView";
+import { Note } from "../../viewModels/Note.VM";
+import { AppDisplay, MainPageVM } from "../../viewModels/MainPage.VM";
+import useLocalStorage from "../../utils/hooks/useLocalStorage";
+import useReactive, { ReactiveState } from "../../utils/hooks/useReactive.hook";
 
 export type Notes = { [key: string]: Note };
 
@@ -28,7 +28,6 @@ const MainPage: React.FC<MainPageProps> = ({ currentNoteKey, appDisplay }) => {
   const vm = new MainPageVM(notes, noteKeysSorted);
 
   useEffect(() => {
-    console.log("I render");
     vm.getAllNotes();
   }, []);
 

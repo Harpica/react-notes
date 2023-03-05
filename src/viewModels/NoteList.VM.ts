@@ -1,6 +1,6 @@
-import { ReactiveState } from "../utils/hooks/useReactive.hook";
 import { AppDisplay } from "./MainPage.VM";
 import { Note } from "./Note.VM";
+import { ReactiveState } from "../utils/hooks/useReactive.hook";
 
 export class NoteListVM {
   public notes: ReactiveState<Map<string, Note> | null>;
