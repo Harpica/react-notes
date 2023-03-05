@@ -7,9 +7,6 @@ import {
   ListItemText,
 } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import { Notes } from "../../App";
-import { ReactiveState } from "../../utils/hooks/useReactive.hook";
-import { Note } from "../../viewModels/Note.VM";
 import React, { useEffect } from "react";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import { NoteListVM } from "../../viewModels/NoteList.VM";
