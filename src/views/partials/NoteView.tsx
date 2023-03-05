@@ -17,14 +17,14 @@ const NoteView: React.FC<NoteViewProps> = ({ note, noteKey }) => {
   const defaultCurrentNoteValue = useRef(note.get);
   const vm = new NoteVM(note, noteKey, defaultCurrentNoteValue);
 
-  const saveAndRerender = useCallback(
-    (reactMarkdowm: HTMLElement, textStyle: TextStyle) => {
-      console.log(textStyle);
-      vm.saveNote(reactMarkdowm, textStyle);
-      vm.setCurrentNoteValue();
-    },
-    [vm]
-  );
+  const saveAndRerender = (
+    reactMarkdowm: HTMLElement,
+    textStyle: TextStyle
+  ) => {
+    vm.saveNote(reactMarkdowm, textStyle);
+    vm.setCurrentNoteValue();
+    console.log("reading new ref", defaultCurrentNoteValue.current.body);
+  };
 
   useEffect(() => {
     const reactMarkdowm = document.querySelector(
@@ -42,7 +42,7 @@ const NoteView: React.FC<NoteViewProps> = ({ note, noteKey }) => {
     return () => {
       off("test formatting", save);
     };
-  }, []);
+  }, [note.get]);
 
   return (
     <Box
@@ -62,14 +62,11 @@ const NoteView: React.FC<NoteViewProps> = ({ note, noteKey }) => {
         contentEditable="true"
         suppressContentEditableWarning={true}
         onInput={(e) => {
-          console.log("hi");
-          console.log(e.currentTarget);
           vm.saveNoteTitle(e.currentTarget.textContent);
         }}
       >
         {defaultCurrentNoteValue.current.title}
       </h1>
-      <p>{vm.currentNote.get.body}</p>
       <Box
         contentEditable="true"
         suppressContentEditableWarning={true}
@@ -80,7 +77,11 @@ const NoteView: React.FC<NoteViewProps> = ({ note, noteKey }) => {
           );
         }}
       >
-        <ReactMarkdown className={"react-markdowm"}>
+        <p>{note.get.body}</p>
+        <ReactMarkdown
+          className={"react-markdowm"}
+          key={defaultCurrentNoteValue.current.body}
+        >
           {defaultCurrentNoteValue.current.body === ""
             ? "Start writting..."
             : defaultCurrentNoteValue.current.body}

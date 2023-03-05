@@ -25,8 +25,8 @@ export class NoteListVM {
     this.isNoteOpen.set(true);
     this.currentNoteKey.set(key);
   }
-  renderDate() {
-    const date = new Date(parseInt(this.currentNoteKey.get));
+  renderDate(key: string) {
+    const date = new Date(parseInt(key));
     return date.toLocaleString();
   }
 }

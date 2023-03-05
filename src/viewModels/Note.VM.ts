@@ -56,6 +56,7 @@ export class NoteVM {
 
   saveNote(HtmlElement: HTMLElement, textStyle: TextStyle) {
     let markdown = turndownService.turndown(HtmlElement);
+    console.log("saving note", markdown);
     if (textStyle !== TextStyle.NONE) {
       const replaceValue = mapToReplaceWith.get(textStyle);
       if (replaceValue) {
@@ -75,6 +76,7 @@ export class NoteVM {
       title: this.currentNote.get.title,
       body: this.markdown,
     };
+    console.log("setting new ref", this.markdown);
   }
   private renderDate() {
     const date = new Date(parseInt(this.noteKey.get));
