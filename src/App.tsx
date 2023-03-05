@@ -10,7 +10,7 @@ function App() {
     (() => {
       const keys = Object.keys(localStorage);
       return keys.length
-        ? keys.sort((a, b) => parseInt(a) - parseInt(b))[0]
+        ? keys.sort((a, b) => parseInt(b) - parseInt(a))[0]
         : Date.now().toString();
     })()
   );
