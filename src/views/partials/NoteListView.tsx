@@ -24,6 +24,11 @@ const NoteListView: React.FC<NoteListViewProps> = ({
   noteKeysSorted,
   mediaMobile,
 }) => {
+  console.log("i render");
+
+  useEffect(() => {
+    console.log("useEffect");
+  }, []);
   const vm = new NoteListVM(
     notes,
     currentNoteKey,
@@ -40,4 +45,4 @@ const NoteListView: React.FC<NoteListViewProps> = ({
   );
 };
 
-export default NoteListView;
+export default React.memo(NoteListView);
