@@ -67,6 +67,7 @@ export class TopMenuVM {
       this.notes.set(notes);
     }
     window.localStorage.removeItem(this.noteKey.get);
+    console.log(window.localStorage.getItem(this.noteKey.get));
     this.noteKey.set(
       (() => {
         const keys = Object.keys(localStorage);

@@ -53,7 +53,6 @@ const NoteView: React.FC<NoteViewProps> = ({ note, noteKey, notes }) => {
     );
     if (defaultCurrentNoteValue.current !== newNote) {
       defaultCurrentNoteValue.current = newNote;
-      note.set(newNote);
     }
   }, [noteKey.get]);
 

@@ -29,6 +29,9 @@ function App() {
       currentNote.key !== currentNoteKey.get
     ) {
       currentNote.setKey(currentNoteKey.get);
+      currentNote.set(
+        JSON.parse(window.localStorage.getItem(currentNoteKey.get) as string)
+      );
     }
     return;
   }, [currentNoteKey]);
