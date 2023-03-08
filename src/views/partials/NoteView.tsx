@@ -46,16 +46,6 @@ const NoteView: React.FC<NoteViewProps> = ({ note, noteKey, notes }) => {
     };
   }, [note.get]);
 
-  useEffect(() => {
-    // updating note if current note changed
-    const newNote = JSON.parse(
-      window.localStorage.getItem(noteKey.get) as string
-    );
-    if (defaultCurrentNoteValue.current !== newNote) {
-      defaultCurrentNoteValue.current = newNote;
-    }
-  }, [noteKey.get]);
-
   return (
     <Box sx={style.box}>
       <Typography>{vm.date}</Typography>

@@ -14,20 +14,18 @@ export type Notes = { [key: string]: Note };
 
 interface MainPageProps {
   currentNoteKey: ReactiveState<string>;
-  currentNote: ReactiveState<Note>;
   appDisplay: ReactiveState<AppDisplay>;
 }
 
-const MainPage: React.FC<MainPageProps> = ({
-  currentNoteKey,
-  currentNote,
-  appDisplay,
-}) => {
+const MainPage: React.FC<MainPageProps> = ({ currentNoteKey, appDisplay }) => {
   const mediaMobile = useMediaQuery("(max-width:600px)");
   const isNoteOpen = useReactive<boolean>(mediaMobile ? false : true);
+  const currentNote = useLocalStorage<Note>(currentNoteKey.get, {
+    title: "Title",
+    body: "",
+  });
 
   const vm = new MainPageVM();
-
   const notes = useReactive<Map<string, Note>>(
     (() => {
       return vm.getAllNotes();
@@ -86,7 +84,6 @@ const MainPage: React.FC<MainPageProps> = ({
               note={currentNote}
               noteKey={currentNoteKey}
               notes={notes}
-              // key={currentNoteKey.get}
             />
           )}
         </Box>

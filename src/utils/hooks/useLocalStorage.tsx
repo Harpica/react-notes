@@ -7,15 +7,14 @@ export type SetValue<T> = (newValue: T) => void;
 function useLocalStorage<T>(
   keyName: string,
   defaultValue: T
-): { get: T; set: SetValue<T>; key: string; setKey: SetValue<string> } {
-  const [key, setKey] = useState<string>(keyName);
+): { get: T; set: SetValue<T> } {
   const [storedValue, setStoredValue] = useState<T>(() => {
     try {
-      const value = window.localStorage.getItem(key);
+      const value = window.localStorage.getItem(keyName);
       if (value !== undefined && value !== null) {
         return JSON.parse(value);
       } else {
-        window.localStorage.setItem(key, JSON.stringify(defaultValue));
+        window.localStorage.setItem(keyName, JSON.stringify(defaultValue));
         return defaultValue;
       }
     } catch (err) {
@@ -26,8 +25,8 @@ function useLocalStorage<T>(
 
   // custom event, returns string - name of the event, like 'onclick'
   const customEventOnSetName = useMemo(() => {
-    return `session-storage-${key}-update`;
-  }, [key]);
+    return `session-storage-${keyName}-update`;
+  }, [keyName]);
 
   // custom event function that dispatches event
   const customEventOnSet = useCallback(
@@ -60,7 +59,7 @@ function useLocalStorage<T>(
   const setValue = useCallback(
     (newValue: T) => {
       try {
-        window.localStorage.setItem(key, JSON.stringify(newValue));
+        window.localStorage.setItem(keyName, JSON.stringify(newValue));
       } catch (err) {
         // придумать, что делать, если во время теста ошибка
         console.log(err);
@@ -68,7 +67,7 @@ function useLocalStorage<T>(
       setStoredValue(newValue);
       customEventOnSet(newValue);
     },
-    [setStoredValue, customEventOnSet, key]
+    [setStoredValue, customEventOnSet, keyName]
   );
 
   // adding listeners for custom event on dicument
@@ -84,9 +83,9 @@ function useLocalStorage<T>(
         customEventListener as EventListener
       );
     };
-  }, [key, storedValue, customEventListener, customEventOnSetName]);
+  }, [keyName, storedValue, customEventListener, customEventOnSetName]);
 
-  return { get: storedValue, set: setValue, key, setKey };
+  return { get: storedValue, set: setValue };
 }
 
 export default useLocalStorage;

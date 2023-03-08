@@ -1,9 +1,6 @@
 import "./App.css";
-import { useEffect } from "react";
-import useLocalStorage from "./utils/hooks/useLocalStorage";
 import useReactive from "./utils/hooks/useReactive.hook";
 import { AppDisplay } from "./viewModels/MainPage.VM";
-import { Note } from "./viewModels/Note.VM";
 import MainPage from "./views/pages/MainPage";
 
 function App() {
@@ -17,31 +14,14 @@ function App() {
         : Date.now().toString();
     })()
   );
-  const currentNote = useLocalStorage<Note>(currentNoteKey.get, {
-    title: "Title",
-    body: "",
-  });
   const appDisplay = useReactive<AppDisplay>("List");
-
-  useEffect(() => {
-    if (
-      currentNote.key !== undefined &&
-      currentNote.key !== currentNoteKey.get
-    ) {
-      currentNote.setKey(currentNoteKey.get);
-      currentNote.set(
-        JSON.parse(window.localStorage.getItem(currentNoteKey.get) as string)
-      );
-    }
-    return;
-  }, [currentNoteKey]);
 
   return (
     <>
       <MainPage
         currentNoteKey={currentNoteKey}
-        currentNote={currentNote}
         appDisplay={appDisplay}
+        key={currentNoteKey.get}
       />
     </>
   );

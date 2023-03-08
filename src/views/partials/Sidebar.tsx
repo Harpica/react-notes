@@ -11,8 +11,6 @@ import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import { NoteListVM } from "../../viewModels/NoteList.VM";
-import { ReactiveState } from "../../utils/hooks/useReactive.hook";
-import { Note } from "../../viewModels/Note.VM";
 
 const style = {
   box: {
@@ -49,10 +47,9 @@ const style = {
 
 interface SidebarProps {
   vm: NoteListVM;
-  notes: ReactiveState<Map<string, Note>>;
 }
 
-const Sidebar: React.FC<SidebarProps> = React.memo(({ vm, notes }) => {
+const Sidebar: React.FC<SidebarProps> = React.memo(({ vm }) => {
   const mediaMobile = useMediaQuery("(max-width:600px)");
   return (
     <Box sx={mediaMobile ? style.boxMobile : style.box}>
@@ -71,9 +68,6 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ vm, notes }) => {
               >
                 <ListItemText sx={style.listTitle} disableTypography={true}>
                   {vm.notes.get?.get(key)?.title}
-                </ListItemText>
-                <ListItemText disableTypography={true}>
-                  {vm.renderDate(key)}
                 </ListItemText>
                 <ListItemText>
                   {vm.notes.get?.get(key) !== undefined && (
