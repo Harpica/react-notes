@@ -75,6 +75,7 @@ export class TopMenuVM {
           : Date.now().toString();
       })()
     );
+    this.closeDeleteModal();
   }
   getMenuAnchorEl() {
     return document.querySelector(".menu-button");
