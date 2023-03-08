@@ -69,6 +69,9 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ vm }) => {
                 <ListItemText sx={style.listTitle} disableTypography={true}>
                   {vm.notes.get?.get(key)?.title}
                 </ListItemText>
+                <ListItemText disableTypography={true}>
+                  {vm.renderDate(key)}
+                </ListItemText>
                 <ListItemText>
                   {vm.notes.get?.get(key) !== undefined && (
                     <ReactMarkdown>

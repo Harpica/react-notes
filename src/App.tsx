@@ -24,17 +24,11 @@ function App() {
   const appDisplay = useReactive<AppDisplay>("List");
 
   useEffect(() => {
-    console.log(currentNote.key, currentNoteKey.get);
     if (
       currentNote.key !== undefined &&
       currentNote.key !== currentNoteKey.get
     ) {
       currentNote.setKey(currentNoteKey.get);
-      const note = window.localStorage.getItem(currentNoteKey.get);
-      if (note) {
-        currentNote.set(JSON.parse(note));
-        return;
-      }
     }
     return;
   }, [currentNoteKey]);
@@ -45,7 +39,6 @@ function App() {
         currentNoteKey={currentNoteKey}
         currentNote={currentNote}
         appDisplay={appDisplay}
-        // key={currentNoteKey.get}
       />
     </>
   );

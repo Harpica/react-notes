@@ -41,15 +41,21 @@ const NoteView: React.FC<NoteViewProps> = ({ note, noteKey, notes }) => {
     // Set lisnener to text formatting
     on("test formatting", save);
 
-    // updating note if current note changed
-    if (defaultCurrentNoteValue.current !== note.get) {
-      defaultCurrentNoteValue.current = note.get;
-    }
-
     return () => {
       off("test formatting", save);
     };
   }, [note.get]);
+
+  useEffect(() => {
+    // updating note if current note changed
+    const newNote = JSON.parse(
+      window.localStorage.getItem(noteKey.get) as string
+    );
+    if (defaultCurrentNoteValue.current !== newNote) {
+      defaultCurrentNoteValue.current = newNote;
+      note.set(newNote);
+    }
+  }, [noteKey.get]);
 
   return (
     <Box sx={style.box}>
