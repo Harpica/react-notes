@@ -7,8 +7,8 @@ export type SetValue<T> = (newValue: T) => void;
 function useLocalStorage<T>(
   keyName: string,
   defaultValue: T
-): { get: T; set: SetValue<T>; key: string; setKey: SetValue<string> } {
-  const [key, setKey] = useState<string>(keyName);
+): [{ get: T; set: SetValue<T> }, { get: string; set: SetValue<string> }] {
+  const [key, setKeyValue] = useState<string>(keyName);
   const [storedValue, setStoredValue] = useState<T>(() => {
     try {
       const value = window.localStorage.getItem(key);
@@ -71,6 +71,19 @@ function useLocalStorage<T>(
     [setStoredValue, customEventOnSet, key]
   );
 
+  const setKey = useCallback(
+    (newKey: string) => {
+      const storedStringValue = window.localStorage.getItem(newKey);
+      if (storedStringValue) {
+        const newValue = JSON.parse(storedStringValue);
+        setStoredValue(newValue);
+        customEventOnSet(newValue);
+      }
+      setKeyValue(newKey);
+    },
+    [setKeyValue, setStoredValue]
+  );
+
   // adding listeners for custom event on dicument
   useEffect(() => {
     document.addEventListener(
@@ -86,7 +99,10 @@ function useLocalStorage<T>(
     };
   }, [key, storedValue, customEventListener, customEventOnSetName]);
 
-  return { get: storedValue, set: setValue, key, setKey };
+  return [
+    { get: storedValue, set: setValue },
+    { get: key, set: setKey },
+  ];
 }
 
 export default useLocalStorage;

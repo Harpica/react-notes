@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useReducer, useRef } from "react";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import { Box } from "@mui/material";
 import Typography from "@mui/material/Typography";
@@ -27,6 +27,8 @@ interface NoteViewProps {
 const NoteView: React.FC<NoteViewProps> = ({ note, noteKey, notes }) => {
   const defaultCurrentNoteValue = useRef(note.get);
   const vm = new NoteVM(note, noteKey, defaultCurrentNoteValue, notes);
+  // force rerender is needed to update visualization of useRef value (only when current note is changed)
+  const [, forceRerender] = useReducer((x) => x + 1, 0);
 
   // Every time currentNote changes, we find once again ReactMarkdown element
   useEffect(() => {
@@ -48,11 +50,9 @@ const NoteView: React.FC<NoteViewProps> = ({ note, noteKey, notes }) => {
 
   useEffect(() => {
     // updating note if current note changed
-    const newNote = JSON.parse(
-      window.localStorage.getItem(noteKey.get) as string
-    );
-    if (defaultCurrentNoteValue.current !== newNote) {
-      defaultCurrentNoteValue.current = newNote;
+    if (defaultCurrentNoteValue.current !== note.get) {
+      defaultCurrentNoteValue.current = note.get;
+      forceRerender();
     }
   }, [noteKey.get]);
 
@@ -80,11 +80,7 @@ const NoteView: React.FC<NoteViewProps> = ({ note, noteKey, notes }) => {
       >
         {/* You can uncomment below to see markdown changes in real time */}
         {/* <p>{note.get.body}</p> */}
-        <ReactMarkdown
-          className={"react-markdown"}
-          // key is needed to rerender component when ref is updated
-          key={defaultCurrentNoteValue.current.body}
-        >
+        <ReactMarkdown className={"react-markdown"}>
           {defaultCurrentNoteValue.current.body === ""
             ? "Start writting..."
             : defaultCurrentNoteValue.current.body}

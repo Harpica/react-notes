@@ -55,10 +55,18 @@ export class TopMenuVM {
     }
     this.isNoteOpen.set(true);
     const date = Date.now().toString();
+    window.localStorage.setItem(
+      date,
+      JSON.stringify({ title: "Title", body: "" })
+    );
     this.noteKey.set(date);
     if (this.notes.get) {
       this.notes.set(this.notes.get.set(date, { title: "Title", body: "" }));
     }
+    // unshift new key value to the start of the array
+    let noteKeysSorted = this.noteKeysSorted.get;
+    noteKeysSorted.unshift(date);
+    this.noteKeysSorted.set(noteKeysSorted);
   }
   deleteNote() {
     if (this.notes.get) {
@@ -76,6 +84,11 @@ export class TopMenuVM {
           : Date.now().toString();
       })()
     );
+    // Deleting key from key array
+    let newNoteKeys = this.noteKeysSorted.get.filter(
+      (key) => key !== this.noteKey.get
+    );
+    this.noteKeysSorted.set(newNoteKeys);
     this.closeDeleteModal();
   }
   getMenuAnchorEl() {
