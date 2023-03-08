@@ -49,10 +49,9 @@ const style = {
 
 interface SidebarProps {
   vm: NoteListVM;
-  notes: ReactiveState<Map<string, Note>>;
 }
 
-const Sidebar: React.FC<SidebarProps> = React.memo(({ vm, notes }) => {
+const Sidebar: React.FC<SidebarProps> = React.memo(({ vm }) => {
   const mediaMobile = useMediaQuery("(max-width:600px)");
   return (
     <Box sx={mediaMobile ? style.boxMobile : style.box}>

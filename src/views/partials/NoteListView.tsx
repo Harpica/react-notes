@@ -34,7 +34,7 @@ const NoteListView: React.FC<NoteListViewProps> = ({
   );
   return (
     <>
-      {appDisplay.get === "List" && <Sidebar vm={vm} notes={notes} />}
+      {appDisplay.get === "List" && <Sidebar vm={vm} />}
       {appDisplay.get === "Grid" && <GridView vm={vm} />}
     </>
   );
