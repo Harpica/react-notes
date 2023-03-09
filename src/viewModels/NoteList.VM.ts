@@ -4,7 +4,7 @@ import { ReactiveState } from "../utils/hooks/useReactive.hook";
 
 export class NoteListVM {
   public notes: ReactiveState<Map<string, Note>>;
-  private currentNoteKey: ReactiveState<string>;
+  public currentNoteKey: ReactiveState<string>;
   private isNoteOpen: ReactiveState<boolean>;
   private appDisplay: ReactiveState<AppDisplay>;
   public noteKeysSorted: ReactiveState<Array<string>>;

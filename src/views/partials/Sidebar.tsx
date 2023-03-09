@@ -67,6 +67,7 @@ const Sidebar: React.FC<SidebarProps> = React.memo(({ vm }) => {
                 onClick={() => {
                   vm.setCurrentNote(key);
                 }}
+                selected={key === vm.currentNoteKey.get}
               >
                 <ListItemText sx={style.listTitle} disableTypography={true}>
                   {vm.notes.get?.get(key)?.title}
